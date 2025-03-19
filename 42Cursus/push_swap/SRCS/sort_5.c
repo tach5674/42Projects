@@ -85,5 +85,6 @@ void	sort_5(t_lst **a, t_lst **b, int size)
 		pa(a, b);
 		ft_printf("pa\n");
 	}
+	free_stack(a, b);
 	exit(0);
 }
