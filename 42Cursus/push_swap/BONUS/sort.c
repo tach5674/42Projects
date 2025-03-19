@@ -6,7 +6,7 @@
 /*   By: mzohraby <mzohraby@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:17:21 by mzohraby          #+#    #+#             */
-/*   Updated: 2025/03/19 16:34:09 by mzohraby         ###   ########.fr       */
+/*   Updated: 2025/03/19 16:46:22 by mzohraby         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,9 @@ void	sort(t_lst **a, t_lst **b)
 			rrb(b);
 		}
 		else
+		{
+			free_stack(a, b);
 			exit_error();
+		}
 	}
 }
