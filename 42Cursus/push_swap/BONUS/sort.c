@@ -6,7 +6,7 @@
 /*   By: mzohraby <mzohraby@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:17:21 by mzohraby          #+#    #+#             */
-/*   Updated: 2025/03/19 16:11:48 by mzohraby         ###   ########.fr       */
+/*   Updated: 2025/03/19 16:34:09 by mzohraby         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,7 @@ void	sort(t_lst **a, t_lst **b)
 {
 	char	*cmd;
 
-	cmd = "smth";
-	while (cmd)
+	while (1)
 	{
 		cmd = get_next_line(STDIN_FILENO);
 		if (!cmd)
