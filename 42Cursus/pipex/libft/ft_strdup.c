@@ -29,11 +29,3 @@ char	*ft_strdup(const char *s1)
 	res[i] = '\0';
 	return (res);
 }
-/*
-int	main(void)
-{
-	char str[] = "dadadf";
-	printf("%s \n", ft_strdup(str));
-	return (0);
-}
-*/

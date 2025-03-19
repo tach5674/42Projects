@@ -6,7 +6,7 @@
 /*   By: mzohraby <mzohraby@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 13:58:39 by mzohraby          #+#    #+#             */
-/*   Updated: 2025/03/09 18:32:33 by mzohraby         ###   ########.fr       */
+/*   Updated: 2025/03/19 13:36:42 by mzohraby         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@ void	exit_error(char *msg, char *cmd)
 		exit(127);
 	}
 	perror(msg);
-	//system("leaks pipex");
 	exit(EXIT_FAILURE);
 }
 
@@ -85,27 +84,25 @@ void	here_doc_handler(char *limmiter, int argc)
 {
 	int		pipefd[2];
 	char	*line;
-	int		n;
-
-	n = 1;
+	
 	if (pipe(pipefd) == -1)
 		exit_error(NULL, NULL);
-	while (n)
+	while (1)
 	{
 		while (argc-- > 5)
 			ft_putstr_fd("pipe ", STDIN_FILENO);
 		ft_putstr_fd("heredoc> ", STDIN_FILENO);
 		line = get_next_line(STDIN_FILENO);
+		ft_putstr_fd(line, 2);
+		write(pipefd[1], line, ft_strlen(line));
 		if (!line) {
-			printf("DFSHKLFNDSLKFJSD\n");
-			exit(21);
+			exit_error(NULL, NULL);
 		}
-		if (ft_strncmp(line, limmiter, ft_strlen(line) - 1) == 0)
+		if (ft_strncmp(line, limmiter, ft_strlen(line)) == 0)
 		{
 			free(line);
 			break ;
 		}
-		n = write(pipefd[1], line, ft_strlen(line));
 		free(line);
 	}
 	close(pipefd[1]);

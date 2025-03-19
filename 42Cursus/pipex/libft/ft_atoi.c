@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_atoi.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mzohraby <mzohraby@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mzohraby <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 17:27:40 by mzohraby          #+#    #+#             */
-/*   Updated: 2025/02/23 15:00:33 by mzohraby         ###   ########.fr       */
+/*   Updated: 2025/01/21 13:25:19 by mzohraby         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,3 @@ int	ft_atoi(const char *str)
 	}
 	return (num * sign);
 }
-/*
-int main(void){
-	printf("%d", ft_atoi("  -+"));
-	return 0;
-}
-*/

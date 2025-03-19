@@ -31,18 +31,3 @@ size_t	ft_strlcat(char *dest, const char *src, size_t size)
 	dest[dest_size + i] = '\0';
 	return (dest_size + src_size);
 }
-/*
-int	main(void)
-{
-	char src[] = "8901";
-	char dest[12] = "01234567";
-	int i = 0;
-	printf("%d \n", ft_strlcat(dest, src, 3));
-	while (dest[i])
-	{
-		write(1, &dest[i], 1);
-		i++;
-	}
-	return (0);
-}
-*/

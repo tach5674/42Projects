@@ -6,7 +6,7 @@
 /*   By: mzohraby <mzohraby@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/19 16:20:02 by mzohraby          #+#    #+#             */
-/*   Updated: 2025/02/13 13:28:16 by mzohraby         ###   ########.fr       */
+/*   Updated: 2025/03/19 12:56:38 by mzohraby         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,15 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include <stdarg.h>
+# include <limits.h>
+
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 42
+# endif
+
+# ifndef OPEN_MAX
+#  define OPEN_MAX 4096
+# endif
 
 typedef struct s_list
 {
@@ -76,5 +85,9 @@ void			ft_printf_p(void *ptr, unsigned int *count);
 void			ft_printf_di(int n, unsigned int *count);
 void			ft_printf_ux(char frmt, unsigned int n, unsigned int *count);
 int				ft_printf(const char *frmt, ...);
+
+char			*gnl_strjoin(char *container, char *buf);
+void			gnl_strlcpy(char *dest, const char *src, int size);
+char			*get_next_line(int fd);
 
 #endif

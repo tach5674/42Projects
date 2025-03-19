@@ -6,7 +6,7 @@
 /*   By: mzohraby <mzohraby@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/08 15:45:49 by mzohraby          #+#    #+#             */
-/*   Updated: 2025/03/09 18:32:08 by mzohraby         ###   ########.fr       */
+/*   Updated: 2025/03/19 12:55:20 by mzohraby         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ char	*get_full_path(char *cmd, char *envp[], char **args, int i)
 
 	if (access(cmd, X_OK) == 0)
 		return (ft_strdup(cmd));
-	path_dir = ft_split(get_path(envp), ':', 0, 0);
+	path_dir = pipex_split(get_path(envp), ':', 0, 0);
 	if (!path_dir)
 		exit_error(NULL, NULL);
 	while (path_dir[i])
@@ -65,7 +65,7 @@ void	access_execute(char *cmd, char *envp[])
 	{
 		if (ft_strchr(cmd, '/'))
 		{
-			args = ft_split(cmd, '\0', 0, 0);
+			args = pipex_split(cmd, '\0', 0, 0);
 			if (!args)
 				exit_error(NULL, NULL);
 			if (execve(cmd, args, envp) == -1)

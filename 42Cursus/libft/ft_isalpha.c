@@ -20,12 +20,3 @@ int	ft_isalpha(int c)
 		return (1);
 	return (0);
 }
-/*
-int main(int argc, char *argv[])
-{
-	(void)argc;
-	(void)**argv;
-	printf("%d", ft_isalpha('t'));
-	return (0);
-}
-*/

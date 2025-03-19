@@ -6,7 +6,7 @@
 /*   By: mzohraby <mzohraby@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 13:31:15 by mzohraby          #+#    #+#             */
-/*   Updated: 2025/03/09 18:31:54 by mzohraby         ###   ########.fr       */
+/*   Updated: 2025/03/19 13:39:36 by mzohraby         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ static void	execute(char *cmd, char *envp[])
 	char	*full_path;
 
 	access_execute(cmd, envp);
-	args = ft_split(cmd, ' ', 0, 0);
+	args = pipex_split(cmd, ' ', 0, 0);
 	if (!args)
 		exit_error(NULL, NULL);
 	full_path = get_full_path(args[0], envp, args, 0);
@@ -77,22 +77,15 @@ static int	out_execute(char *cmd, char *output, char *envp[])
 
 int	main(int argc, char *argv[], char *envp[])
 {
-	int	pid;
-
-	fprintf(stderr, "HERE\n");
 	if (argc != 5)
 	{
 		ft_putstr_fd("pipex: Invalid number of arguments\n", STDERR_FILENO);
-		//system("leaks pipex");
 		exit(EXIT_FAILURE);
 	}
-	fprintf(stderr, "HERE\n");
 	in_execute(argv[2], argv[1], envp);
-	pid = out_execute(argv[3], argv[4], envp);
+	out_execute(argv[3], argv[4], envp);
 	close(STDIN_FILENO);
 	while (wait(NULL) > 0)
 		;
-	fprintf(stderr, "HERE\n");
-	//system("leaks pipex");
 	return (0);
 }

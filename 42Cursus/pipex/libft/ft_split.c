@@ -6,13 +6,13 @@
 /*   By: mzohraby <mzohraby@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 12:29:08 by mzohraby          #+#    #+#             */
-/*   Updated: 2025/03/09 17:09:04 by mzohraby         ###   ########.fr       */
+/*   Updated: 2025/03/19 13:44:31 by mzohraby         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static void	*res_free(char **res, char *str, int i)
+static void	*res_free(char **res, char *str, unsigned int i)
 {
 	while (i--)
 		free(res[i]);
@@ -48,10 +48,10 @@ static char	**one_string_case(const char *s)
 	return (res);
 }
 
-static char	**splitter(char *str, int count)
+static char	**splitter(char *str, unsigned int count)
 {
 	char			**res;
-	int				i;
+	unsigned int	i;
 	char			*temp;
 
 	res = malloc((count + 1) * sizeof(char *));
@@ -74,58 +74,30 @@ static char	**splitter(char *str, int count)
 	return (res);
 }
 
-static int	helper(char **str, char **temp, int *count, int *i)
-{
-	char	c;
-
-	if ((*str)[*i] == '\'' || (*str)[*i] == '"')
-	{
-		c = (*str)[*i];
-		(*str)[(*i)++] = '\0';
-		(*temp)++;
-		while ((*str)[*i] && ((*str)[*i] != c))
-			(*i)++;
-		if ((*str)[*i])
-		{
-			*temp = *str + *i + 1;
-			(*str)[*i] = '\0';
-			(*count)++;
-			return (0);
-		}
-		else
-		{
-			*temp = *str + *i;
-			return (1);
-		}
-	}
-	return (0);
-}
-
-char	**ft_split(char const *s, char c, int i, int count)
+char	**ft_split(char const *s, char c)
 {
 	char			*str;
 	char			*temp;
+	unsigned int	count;
 
 	if (c == '\0')
 		return (one_string_case(s));
 	str = ft_strdup(s);
 	if (!str)
 		return (NULL);
+	count = 0;
 	temp = str;
-	while (str[i])
+	while (ft_strchr(temp, c))
 	{
-		if (str[i] == c)
-		{
-			str[i] = '\0';
-			if (ft_strchr(temp, '\0') > temp)
-				count++;
-			temp = str + i + 1;
-		}
-		else if (helper(&str, &temp, &count, &i) == 1)
-			break ;
-		i++;
+		*ft_strchr(temp, c) = '\0';
+		if (ft_strlen(temp++) == 0)
+			continue ;
+		temp--;
+		temp = ft_strchr(temp, '\0');
+		temp++;
+		count++;
 	}
-	if (ft_strchr(temp, '\0') > temp)
+	if (*temp != '\0')
 		count++;
 	return (splitter(str, count));
 }

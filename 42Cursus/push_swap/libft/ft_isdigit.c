@@ -18,12 +18,3 @@ int	ft_isdigit(int c)
 		return (1);
 	return (0);
 }
-/*
-int main(int argc, char *argv[])
-{
-	(void)argc;
-	(void)**argv;
-	printf("%d", ft_isdigit('6'));
-	return (0);
-}
-*/

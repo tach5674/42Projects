@@ -6,7 +6,7 @@
 /*   By: mzohraby <mzohraby@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/19 16:20:02 by mzohraby          #+#    #+#             */
-/*   Updated: 2025/03/06 14:51:39 by mzohraby         ###   ########.fr       */
+/*   Updated: 2025/03/19 12:54:08 by mzohraby         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,10 @@
 
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 42
+# endif
+
+# ifndef OPEN_MAX
+#  define OPEN_MAX 4096
 # endif
 
 typedef struct s_list
@@ -56,7 +60,7 @@ void			*ft_calloc(size_t count, size_t size);
 char			*ft_strjoin(char const *s1, char const *s2);
 char			*ft_substr(char const *s, unsigned int start, size_t len);
 char			*ft_strtrim(char const *s1, char const *set);
-char			**ft_split(char const *s, char c, int i, int count);
+char			**ft_split(char const *s, char c);
 char			*ft_itoa(int n);
 char			*ft_strmapi(char const *s, char (*f)(unsigned int, char));
 void			ft_striteri(char *s, void (*f)(unsigned int, char*));
@@ -81,8 +85,9 @@ void			ft_printf_p(void *ptr, unsigned int *count);
 void			ft_printf_di(int n, unsigned int *count);
 void			ft_printf_ux(char frmt, unsigned int n, unsigned int *count);
 int				ft_printf(const char *frmt, ...);
-char			*get_next_line(int fd);
+
 char			*gnl_strjoin(char *container, char *buf);
 void			gnl_strlcpy(char *dest, const char *src, int size);
+char			*get_next_line(int fd);
 
 #endif

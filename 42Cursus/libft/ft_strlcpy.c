@@ -30,19 +30,3 @@ size_t	ft_strlcpy(char *dest, const char *src, size_t size)
 		i++;
 	return (i);
 }
-/*
-int	main(void)
-{
-	char	src[5] = "abcde";
-	char	dest[3];
-
-	printf("%d", ft_strlcpy(dest, src, 3));
-	int i = 0;
-	while (dest[i]){
-		write(1, &dest[i], 1);
-		i++;
-	}
-	printf("%lu", strlen(dest));
-	return (0);
-}
-*/

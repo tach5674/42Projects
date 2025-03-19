@@ -36,9 +36,3 @@ int	ft_atoi(const char *str)
 	}
 	return (num * sign);
 }
-/*
-int main(void){
-	printf("%d", ft_atoi("  -+"));
-	return 0;
-}
-*/

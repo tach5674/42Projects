@@ -1,10 +1,10 @@
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
 
-SRCS = pipex.c utils.c get_path.c
+SRCS = pipex.c utils.c get_path.c pipex_split.c
 OBJS = $(SRCS:.c=.o)
 
-BONUS_SRCS = pipex_bonus.c utils_bonus.c get_path_bonus.c
+BONUS_SRCS = pipex_bonus.c utils_bonus.c get_path_bonus.c pipex_split_bonus.c
 BONUS_OBJS = $(BONUS_SRCS:.c=.o)
 
 LIBFT = libft/libft.a
