@@ -6,7 +6,7 @@
 /*   By: mzohraby <mzohraby@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 13:31:15 by mzohraby          #+#    #+#             */
-/*   Updated: 2025/03/19 13:04:52 by mzohraby         ###   ########.fr       */
+/*   Updated: 2025/03/19 18:19:09 by mzohraby         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,7 @@ static void	out_execute(char *cmd, char *output, int check, char *envp[])
 		open_dup(output, STDOUT_FILENO, check);
 		execute(cmd, envp);
 	}
+	
 }
 
 int	main(int argc, char *argv[], char *envp[])

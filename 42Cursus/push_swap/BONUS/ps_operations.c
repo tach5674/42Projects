@@ -16,6 +16,8 @@ void	pa(t_lst **a, t_lst **b)
 {
 	t_lst	*temp;
 
+	if (*b == NULL)
+		return ;
 	temp = (*b)->next;
 	(*b)->next = *a;
 	*a = *b;
@@ -26,6 +28,8 @@ void	pb(t_lst **a, t_lst **b)
 {
 	t_lst	*temp;
 
+	if (*a == NULL)
+		return ;
 	temp = (*a)->next;
 	(*a)->next = *b;
 	*b = *a;

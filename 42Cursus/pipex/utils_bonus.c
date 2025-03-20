@@ -6,7 +6,7 @@
 /*   By: mzohraby <mzohraby@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/23 13:58:39 by mzohraby          #+#    #+#             */
-/*   Updated: 2025/03/19 13:36:42 by mzohraby         ###   ########.fr       */
+/*   Updated: 2025/03/19 18:02:08 by mzohraby         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,16 +93,15 @@ void	here_doc_handler(char *limmiter, int argc)
 			ft_putstr_fd("pipe ", STDIN_FILENO);
 		ft_putstr_fd("heredoc> ", STDIN_FILENO);
 		line = get_next_line(STDIN_FILENO);
-		ft_putstr_fd(line, 2);
-		write(pipefd[1], line, ft_strlen(line));
 		if (!line) {
 			exit_error(NULL, NULL);
 		}
-		if (ft_strncmp(line, limmiter, ft_strlen(line)) == 0)
+		if (ft_strncmp(line, ft_strjoin(limmiter, "\n"), ft_strlen(line)) == 0)
 		{
 			free(line);
 			break ;
 		}
+		write(pipefd[1], line, ft_strlen(line));
 		free(line);
 	}
 	close(pipefd[1]);

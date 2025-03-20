@@ -42,7 +42,7 @@ $(NAME): $(LIBFT) $(OBJS)
 bonus: $(LIBFT) $(BONUS_OBJS)
 	$(CC) $(CFLAGS) $(BONUS_OBJS) -Llibft -lft -o $(BONUS_NAME)
 
-%.o: %.c INCLUDES
+%.o: %.c INCLUDES/*
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
