@@ -6,7 +6,9 @@ OBJ_FOLDER = srcs
 
 SRCS = $(SRC_FOLDER)/fdf.c \
 		$(SRC_FOLDER)/color_encoder_decoder.c \
-		$(SRC_FOLDER)/color_management.c
+		$(SRC_FOLDER)/color_management.c \
+		$(SRC_FOLDER)/get_dims.c \
+		$(SRC_FOLDER)/utils.c
 
 OBJS = $(SRCS:.c=.o)
 

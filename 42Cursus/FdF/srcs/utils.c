@@ -1,38 +1,52 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_atoi.c                                          :+:      :+:    :+:   */
+/*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mzohraby <mzohraby@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/11 17:27:40 by mzohraby          #+#    #+#             */
-/*   Updated: 2025/03/24 15:07:49 by mzohraby         ###   ########.fr       */
+/*   Created: 2025/03/24 16:50:42 by mzohraby          #+#    #+#             */
+/*   Updated: 2025/03/24 18:08:29 by mzohraby         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "fdf.h"
 
-int	ft_atoi(const char *str)
+void	free_fdf(int **fdf, int n)
 {
-	unsigned int	sign;
-	int				num;
+	int	i;
 
-	while (*str == ' ' || *str == '\t' || *str == '\v'
-		|| *str == '\f' || *str == '\n' || *str == '\r')
-		str++;
-	sign = 1;
-	if (*str == '+' || *str == '-')
+	i = 0;
+	while (i < n)
 	{
-		if (*str == '-')
-			sign *= -1;
-		str++;
+		// ft_printf("%d\n", fdf[i][0]);
+		free(fdf[i]);
+		i++;
 	}
-	num = 0;
-	while (*str >= '0' && *str <= '9')
+	free(fdf);
+}
+
+void	free_split(char **nums)
+{
+	int	i;
+
+	i = 0;
+	while (nums[i])
 	{
-		num *= 10;
-		num += *str - '0';
-		str++;
+		free(nums[i]);
+		i++;
 	}
-	return (num * sign);
+	free(nums);
+}
+
+void	exit_error(void)
+{
+	perror("FdF");
+	exit(1);
+}
+
+void	free_exit(int **fdf, int i)
+{
+	free_fdf(fdf, i);
+	exit_error();
 }
