@@ -6,7 +6,7 @@
 /*   By: mzohraby <mzohraby@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 11:40:59 by mzohraby          #+#    #+#             */
-/*   Updated: 2025/03/24 19:40:08 by mzohraby         ###   ########.fr       */
+/*   Updated: 2025/03/24 19:43:58 by mzohraby         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,20 +170,15 @@ void	fill_matrix(int ***fdf, int height, int width, char *input)
 	close(fd);
 }
 
-void bresenham(t_vars *vars, int x1, int y1, int x2, int y2) 
+void bresenham(t_vars *vars, int x1, int y1, int x2, int y2, int color) 
 { 
     int	m_new;
     int	slope_error_new;
 	int	x;
 	int	y;
-	int	color;
 	
 	x = x1;
 	y = y1;
-	if (vars->data.fdf[x / 100][y / 100] == 0)
-		color = 0xFFFFFF;
-	else
-		color = 0xFF0000;
 	if (abs(x2 - x1) > abs(y2 - y1))
 	{
 		m_new = 2 * (y2 - y1);
@@ -221,6 +216,7 @@ void	draw(t_vars *vars, int height, int width)
 	int	i;
 	int	j;
 	int	scale;
+	int	color;
 	
 	scale = 50;
 	i = 0;
@@ -229,10 +225,14 @@ void	draw(t_vars *vars, int height, int width)
 		j = 0;
 		while (j < height)
 		{
+			if (vars->data.fdf[j][i] == 0)
+				color = 0xFFFFFF;
+			else
+				color = 0xFF0000;
 			if (i + 1 < width)
-				bresenham(vars, i * scale, j * scale, (i + 1) * scale, j * scale);
+				bresenham(vars, i * scale, j * scale, (i + 1) * scale, j * scale, color);
 			if (j + 1 < height)
-				bresenham(vars, i * scale, j * scale, i * scale, (j + 1) * scale);
+				bresenham(vars, i * scale, j * scale, i * scale, (j + 1) * scale, color);
 			j++;
 		}
 		i++;
