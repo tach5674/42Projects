@@ -6,7 +6,7 @@
 /*   By: mzohraby <mzohraby@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 16:50:42 by mzohraby          #+#    #+#             */
-/*   Updated: 2025/03/24 18:08:29 by mzohraby         ###   ########.fr       */
+/*   Updated: 2025/03/25 12:56:46 by mzohraby         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,11 @@ void	free_fdf(int **fdf, int n)
 {
 	int	i;
 
+	if (n == -1)
+		return ;
 	i = 0;
 	while (i < n)
 	{
-		// ft_printf("%d\n", fdf[i][0]);
 		free(fdf[i]);
 		i++;
 	}
@@ -39,14 +40,18 @@ void	free_split(char **nums)
 	free(nums);
 }
 
-void	exit_error(void)
+void	free_mlx(t_vars *vars)
 {
-	perror("FdF");
-	exit(1);
+	mlx_destroy_image(vars->mlx, vars->data.img);
+	mlx_destroy_window(vars->mlx, vars->win);
+	mlx_destroy_display(vars->mlx);
+	free(vars->mlx);
 }
 
-void	free_exit(int **fdf, int i)
+void	exit_error(t_vars *vars, int n)
 {
-	free_fdf(fdf, i);
-	exit_error();
+	free_mlx(vars);
+	free_fdf(vars->data.fdf, n);
+	perror("FdF");
+	exit(1);
 }

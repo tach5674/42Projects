@@ -6,11 +6,42 @@
 /*   By: mzohraby <mzohraby@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 11:40:59 by mzohraby          #+#    #+#             */
-/*   Updated: 2025/03/24 19:43:58 by mzohraby         ###   ########.fr       */
+/*   Updated: 2025/03/26 17:34:31 by mzohraby         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/fdf.h"
+
+// int	mouse_move_handler(int x, int y)
+// {
+// 	static int	x_prev;
+// 	static int	y_prev;
+//
+// 	printf("%f\n", atan2(y - y_prev, x - x_prev));
+// 	x_prev = x;
+// 	y_prev = y;
+// 	return (0);
+// }
+
+// int	render_next_frame(t_vars *vars)
+// {
+// 	int			i;
+// 	int			j;
+
+// 	i = 0;
+// 	while (i < 1080)
+// 	{
+// 		j = 0;
+// 		while (j < 1920)
+// 		{
+// 			my_mlx_pixel_put(&vars->data, j, i, create_trgb(1, 255, 0, 0));
+// 			j++;
+// 		}
+// 		i++;
+// 	}
+// 	mlx_put_image_to_window(vars->mlx, vars->win, vars->data.img, 0, 0);
+// 	return (0);
+// }
 
 static void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
 {
@@ -33,14 +64,14 @@ static void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
 		dst[2] = (color >> 8) & 0xFF;
 		dst[3] = (color) & 0xFF;
 	}
-	// *(unsigned int *)dst = color;
 }
 
 int	close_window_escape(int keycode, t_vars *vars)
 {
 	if (keycode == ESC_KEY)
 	{
-		mlx_destroy_window(vars->mlx, vars->win);
+		free_mlx(vars);
+		free_fdf(vars->data.fdf, vars->data.height);
 		exit(0);
 	}
 	return (0);
@@ -48,39 +79,9 @@ int	close_window_escape(int keycode, t_vars *vars)
 
 int	close_window(t_vars *vars)
 {
-	mlx_destroy_window(vars->mlx, vars->win);
+	free_mlx(vars);
+	free_fdf(vars->data.fdf, vars->data.height);
 	exit(0);
-}
-
-// int	mouse_move_handler(int x, int y)
-// {
-// 	static int	x_prev;
-// 	static int	y_prev;
-//
-// 	printf("%f\n", atan2(y - y_prev, x - x_prev));
-// 	x_prev = x;
-// 	y_prev = y;
-// 	return (0);
-// }
-
-int	render_next_frame(t_vars *vars)
-{
-	int			i;
-	int			j;
-
-	i = 0;
-	while (i < 1080)
-	{
-		j = 0;
-		while (j < 1920)
-		{
-			my_mlx_pixel_put(&vars->data, j, i, create_trgb(1, 255, 0, 0));
-			j++;
-		}
-		i++;
-	}
-	mlx_put_image_to_window(vars->mlx, vars->win, vars->data.img, 0, 0);
-	return (0);
 }
 
 void	clear(t_vars *vars)
@@ -101,143 +102,180 @@ void	clear(t_vars *vars)
 	}
 }
 
-// int	key_hook(int keycode)
-// {
-// 	ft_printf("%d\n", keycode);
-// 	// if (keycode == UP)
-// 	// {
-// 	// 	vars->img.y -= 10;
-// 	// 	draw_circle(vars, 0xFFFFFF);
-// 	// }
-// 	// else if (keycode == DOWN)
-// 	// {
-// 	// 	vars->img.y += 10;
-// 	// 	draw_circle(vars, 0xFFFFFF);
-// 	// }
-// 	// else if(keycode == LEFT)
-// 	// {
-// 	// 	vars->img.x -= 10;
-// 	// 	draw_circle(vars, 0xFFFFFF);
-// 	// }
-// 	// else if (keycode == RIGHT)
-// 	// {
-// 	// 	vars->img.x += 10;
-// 	// 	draw_circle(vars, 0xFFFFFF);
-// 	// }
-// 	return (0);
-// }
-
-void	fill_helper(int ***fdf, int height, int width, int fd)
+void slope_bigger_then_one(int dx, int dy, t_point *a, t_vars *vars)
 {
-	int		i;
-	int		j;
-	char	**nums;
-	char	*line;
+	int p;
+	int i;
 
 	i = -1;
-	while (++i < height)
+	p = 2 * abs(dx) - abs(dy);
+	my_mlx_pixel_put(&vars->data, a->x + vars->data.offsetX, a->y + vars->data.offsetY, a->color);
+	while (++i < abs(dy))
 	{
-		(*fdf)[i] = (int *)malloc(width * sizeof(int));
-		if (!((*fdf)[i]))
-			free_exit(*fdf, i);
-		line = get_next_line(fd);
-		if (!line)
-			free_exit(*fdf, i);
-		nums = ft_split(line, ' ');
-		if (!nums)
-			free_exit(*fdf, i);
-		j = -1;
-		while (++j < width)
-			(*fdf)[i][j] = atoi(nums[j]);
-		free(line);
-		free_split(nums);
+		if (dy > 0)
+			a->y += 1;
+		else
+			a->y -= 1;
+		if (p < 0)
+			p = p + 2 * abs(dx);
+		else
+		{
+			if (dx > 0)
+				a->x += 1;
+			else
+				a->x -= 1;
+			p = p + 2 * abs(dx) - 2 * abs(dy);
+		}
+		my_mlx_pixel_put(&vars->data, a->x + vars->data.offsetX , a->y + vars->data.offsetY, a->color);
 	}
 }
 
-void	fill_matrix(int ***fdf, int height, int width, char *input)
+void slope_less_then_one(int dx, int dy, t_point *a, t_vars *vars)
 {
-	int		fd;
+	int p;
+	int i;
 
-	if (height == 0 || width == 0)
-		exit(0);
-	fd = open(input, O_RDONLY);
-	if (fd == -1)
-		exit_error();
-	*fdf = (int **)malloc(height * sizeof(int *));
-	if (!(*fdf))
-		exit_error();
-	fill_helper(fdf, height, width, fd);
-	close(fd);
+	i = -1;
+	p = 2 * abs(dy) - abs(dx);
+	my_mlx_pixel_put(&vars->data, a->x + vars->data.offsetX, a->y + vars->data.offsetY, a->color);
+	while (++i < abs(dx))
+	{
+		if (dx > 0)
+			a->x += 1;
+		else
+			a->x -= 1;
+		if (p < 0)
+			p = p + 2 * abs(dy);
+		else
+		{
+			if (dy > 0)
+				a->y += 1;
+			else
+				a->y -= 1;
+			p = p + 2 * abs(dy) - 2 * abs(dx);
+		}
+		my_mlx_pixel_put(&vars->data, a->x + vars->data.offsetX, a->y + vars->data.offsetY, a->color);
+	}
 }
 
-void bresenham(t_vars *vars, int x1, int y1, int x2, int y2, int color) 
-{ 
-    int	m_new;
-    int	slope_error_new;
-	int	x;
-	int	y;
+void	isometric(t_point *a)
+{
+	int		temp;
 	
-	x = x1;
-	y = y1;
-	if (abs(x2 - x1) > abs(y2 - y1))
+	temp = a->x;
+	a->x = (temp - a->y) * cos(0.6);
+	a->y = (temp + a->y) * sin(0.6) - a->z;
+}
+
+void	scale(t_point *a, int scale)
+{
+	a->x *= scale;
+	a->y *= scale;
+	a->z *= scale;
+}
+
+void	set_point(t_vars *vars, t_point *a, int i, int j)
+{
+	if (vars->data.fdf[j][i] > 0)
+		a->color = 0x0000FF;
+	else
+		a->color = 0xFFFFFF; 
+	a->x = i;
+	a->y = j;
+	a->z = vars->data.fdf[j][i];
+	scale(a, vars->data.scale);
+	isometric(a);
+}
+
+void bresenham(t_vars *vars, int i, int j, int check) 
+{ 
+	int dx;
+	int dy;
+	t_point	a;
+	t_point	b;
+	
+	if (check)
 	{
-		m_new = 2 * (y2 - y1);
-		slope_error_new = m_new - (x2 - x1);
-		while (x < x2)
-		{
-			my_mlx_pixel_put(&vars->data, x, y, color);
-			slope_error_new += m_new;
-			if (slope_error_new >= 0) {
-				y++;
-				slope_error_new -= 2 * (x2 - x1);
-			}
-			x++;
-		}
+		set_point(vars, &a, i, j);
+		set_point(vars, &b, i, j + 1);
 	}
 	else
 	{
-		m_new = 2 * (x2 - x1);
-		slope_error_new = m_new - (y2 - y1);
-		while (y < y2)
-		{
-			my_mlx_pixel_put(&vars->data, x, y, color);
-			slope_error_new += m_new;
-			if (slope_error_new >= 0) {
-				x++;
-				slope_error_new -= 2 * (y2 - y1);
-			}
-			y++;
-		}	
+		set_point(vars, &a, i, j);
+		set_point(vars, &b, i + 1, j);
 	}
+	dx = b.x - a.x;
+	dy = b.y - a.y;
+	if (abs(dx) > abs(dy))
+		slope_less_then_one(dx, dy, &a, vars);
+	else
+		slope_bigger_then_one(dx, dy, &a, vars);
 }
 
-void	draw(t_vars *vars, int height, int width)
+void	draw(t_vars *vars)
 {
 	int	i;
 	int	j;
-	int	scale;
-	int	color;
-	
-	scale = 50;
-	i = 0;
-	while (i < width)
+
+	clear(vars);
+	i = -1;
+	while (++i < vars->data.width)
 	{
-		j = 0;
-		while (j < height)
+		j = -1;
+		while (++j < vars->data.height)
 		{
-			if (vars->data.fdf[j][i] == 0)
-				color = 0xFFFFFF;
-			else
-				color = 0xFF0000;
-			if (i + 1 < width)
-				bresenham(vars, i * scale, j * scale, (i + 1) * scale, j * scale, color);
-			if (j + 1 < height)
-				bresenham(vars, i * scale, j * scale, i * scale, (j + 1) * scale, color);
-			j++;
+			if (i + 1 < vars->data.width)
+				bresenham(vars, i, j, 0);
+			if (j + 1 < vars->data.height)
+				bresenham(vars, i, j, 1);
 		}
-		i++;
 	}
 	mlx_put_image_to_window(vars->mlx, vars->win, vars->data.img, 0, 0);
+}
+
+
+int	key_hook(int keycode, t_vars *vars)
+{
+	//ft_printf("%i\n", keycode);
+	if (keycode == UP)
+	{
+		vars->data.offsetY -= 30;
+		draw(vars);
+	}
+	else if (keycode == DOWN)
+	{
+		vars->data.offsetY += 30;
+		draw(vars);
+	}
+	else if(keycode == LEFT)
+	{
+		vars->data.offsetX -= 30;
+		draw(vars);
+	}
+	else if (keycode == RIGHT)
+	{
+		vars->data.offsetX += 30;
+		draw(vars);
+	}
+	return (0);
+}
+
+int mouse_hook(int button, int x, int y, t_vars *vars)
+{
+    (void)x;
+    (void)y;
+    
+	if (button == MOUSE_SCROLL_UP)
+	{
+		vars->data.scale += 2;
+		draw(vars);
+	}
+	else if (button == MOUSE_SCROLL_DOWN)
+	{
+		vars->data.scale -= 2;
+		draw(vars);
+	}
+	return (0);
 }
 
 int	main(int argc, char *argv[])
@@ -254,8 +292,14 @@ int	main(int argc, char *argv[])
 		ft_putstr_fd("Error: usage ./fdf file.fdf\n", 2);
 		return (1);
 	}
-	fill_matrix(&vars.data.fdf, get_height(argv[1]),
-		get_width(argv[1]), argv[1]);
+	vars.data.input = argv[1];
+	vars.data.height = get_height(&vars);
+	vars.data.width = get_width(&vars);
+	fill_matrix(&vars, argv[1]);
+	vars.data.scale = 30;
+	vars.data.offsetX = (WIDTH - vars.data.width * vars.data.scale) / 2;
+	vars.data.offsetY = (HEIGHT - vars.data.height * vars.data.scale) / 2;
+	vars.data.mouse_pressed = 0;
 	vars.mlx = mlx_init();
 	vars.win = mlx_new_window(vars.mlx, WIDTH, HEIGHT, "FdF");
 	vars.data.img = mlx_new_image(vars.mlx, WIDTH, HEIGHT);
@@ -263,11 +307,11 @@ int	main(int argc, char *argv[])
 			&vars.data.line_length, &vars.data.endian);
 	mlx_hook(vars.win, 2, 1L << 0, close_window_escape, &vars);
 	mlx_hook(vars.win, 17, 1l << 17, close_window, &vars);
-	draw(&vars, get_height(argv[1]), get_width(argv[1]));
+	draw(&vars);
 	// mlx_hook(vars.win, 6, (1L << 6), mouse_move_handler, NULL);
 	//mlx_loop_hook(vars.mlx, render_next_frame, &vars);
-	//mlx_key_hook(vars.win, key_hook, &vars);
+	mlx_key_hook(vars.win, key_hook, &vars);
+	mlx_mouse_hook(vars.win, mouse_hook, &vars);
 	mlx_loop(vars.mlx);
-	free_fdf(vars.data.fdf, get_height(argv[1]));
 	return (0);
 }
