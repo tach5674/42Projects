@@ -6,7 +6,7 @@
 /*   By: mzohraby <mzohraby@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 11:46:58 by mzohraby          #+#    #+#             */
-/*   Updated: 2025/03/26 17:14:27 by mzohraby         ###   ########.fr       */
+/*   Updated: 2025/03/26 18:31:56 by mzohraby         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,13 @@
 # define HEIGHT 1080
 # define WIDTH 1920
 
+typedef	struct s_point{
+	int	x;
+	int	y;
+	int	z;
+	int color;
+}	t_point;
+
 typedef struct s_data{
 	void	*img;
 	char	*addr;
@@ -48,15 +55,11 @@ typedef struct s_data{
 	int		scale;
 	int		offsetX;
 	int		offsetY;
+	t_point	a;
+	t_point	b;
+	float	x1;
 	int		mouse_pressed;
 }	t_data;
-
-typedef	struct s_point{
-	int	x;
-	int	y;
-	int	z;
-	int color;
-}	t_point;
 
 typedef struct s_vars{
 	void	*mlx;
@@ -81,5 +84,8 @@ void	free_fdf(int **fdf, int n);
 void	free_mlx(t_vars *vars);
 
 void	exit_error(t_vars *vars, int i);
+
+void	my_mlx_pixel_put(t_data *data, int x, int y, int color);
+void	bresenham(t_vars *vars, int i, int j, int check);
 
 #endif
