@@ -6,7 +6,7 @@
 /*   By: mzohraby <mzohraby@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 16:11:37 by mzohraby          #+#    #+#             */
-/*   Updated: 2025/03/31 16:14:02 by mzohraby         ###   ########.fr       */
+/*   Updated: 2025/03/31 19:20:03 by mzohraby         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,12 @@ void	set_point(t_vars *vars, t_point *a, int i, int j)
 	a->x *= vars->data.scale;
 	a->y *= vars->data.scale;
 	a->z *= vars->data.scale;
+    if (vars->data.z_key == 1)
+		rotate_z(&vars->data, a);
+    if (vars->data.y_key == 1)
+		rotate_y(&vars->data, a);
+    if (vars->data.x_key == 1)
+		rotate_x(&vars->data, a);
 	isometric(a);
 	a->x += vars->data.offsetX;
 	a->y += vars->data.offsetY;

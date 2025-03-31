@@ -6,7 +6,7 @@
 /*   By: mzohraby <mzohraby@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 11:46:58 by mzohraby          #+#    #+#             */
-/*   Updated: 2025/03/31 16:27:03 by mzohraby         ###   ########.fr       */
+/*   Updated: 2025/03/31 18:54:22 by mzohraby         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ typedef struct s_data{
 	char	*input;
 	int		height;
 	int		width;
+	//int		depth;
 	float	offsetX;
 	float	offsetY;
 	float	targetOffsetX;
@@ -66,6 +67,12 @@ typedef struct s_data{
 	int		x1;
 	int		y1;
 	int		needs_update;
+	float	alpha;
+	float	betta;
+	float	gamma;
+	int		x_key;
+	int		y_key;
+	int		z_key;	
 }	t_data;
 
 typedef struct s_vars{
@@ -100,12 +107,18 @@ int		get_color(t_data *data);
 
 int		key_hook(int keycode, t_vars *vars);
 int		mouse_hook(int button, int x, int y, t_vars *vars);
+int		key_press(int keycode, t_data *data);
+int		key_release(int keycode, t_data *data);
 int		smooth_zoom(t_vars *vars);
 int		smooth_translate(t_vars *vars);
 int		render_next_frame(t_vars *vars);
 
+void    rotate_x(t_data * data, t_point *a);
+void    rotate_y(t_data * data, t_point *a);
+void    rotate_z(t_data * data, t_point *a);
+
 int		close_window(t_vars *vars);
-int		close_window_escape(int keycode, t_vars *vars);
+void	close_window_escape(t_vars *vars);
 
 void	my_mlx_pixel_put(t_data *data, int x, int y, int color);
 

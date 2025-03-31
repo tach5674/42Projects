@@ -15,7 +15,10 @@ SRCS = $(SRC_FOLDER)/fdf.c \
 		$(SRC_FOLDER)/error_handlers.c \
 		$(SRC_FOLDER)/cleanup_functions.c \
 		$(SRC_FOLDER)/hooks.c \
-		$(SRC_FOLDER)/draw.c
+		$(SRC_FOLDER)/draw.c \
+		$(SRC_FOLDER)/hook_handlers.c \
+		$(SRC_FOLDER)/rotations.c
+
 
 OBJS = $(SRCS:.c=.o)
 
