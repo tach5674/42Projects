@@ -6,13 +6,13 @@
 /*   By: mzohraby <mzohraby@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 16:48:44 by mzohraby          #+#    #+#             */
-/*   Updated: 2025/03/25 12:58:39 by mzohraby         ###   ########.fr       */
+/*   Updated: 2025/03/31 12:42:12 by mzohraby         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-static int	count(t_vars *vars, char *line)
+static int	count(char *line)
 {
 	char	**nums;
 	int		count;
@@ -24,7 +24,7 @@ static int	count(t_vars *vars, char *line)
 	if (!nums)
 	{
 		free(line);
-		exit_error(vars, -1);
+		input_error("INPUT");
 	}
 	count = 0;
 	i = 0;
@@ -38,50 +38,31 @@ static int	count(t_vars *vars, char *line)
 	return (count);
 }
 
-int	get_height(t_vars *vars)
+void	get_dims(t_data *data)
 {
 	int		fd;
-	int		height;
 	char	*line;
 
-	fd = open(vars->data.input, O_RDONLY);
+	fd = open(data->input, O_RDONLY);
 	if (fd == -1)
-		exit_error(vars, -1);
-	height = 0;
+		input_error("INPUT");
 	line = get_next_line(fd);
+	if (errno)
+		input_error("INPUT");
 	while (line)
 	{
-		height++;
-		free(line);
-		line = get_next_line(fd);
-	}
-	close(fd);
-	return (height);
-}
-
-int	get_width(t_vars *vars)
-{
-	int		fd;
-	int		width;
-	char	*line;
-
-	fd = open(vars->data.input, O_RDONLY);
-	if (fd == -1)
-		exit_error(vars, -1);
-	line = get_next_line(fd);
-	width = count(vars, line);
-	if (width == 0)
-		return (0);
-	while (line)
-	{
-		free(line);
-		line = get_next_line(fd);
-		if (line && count(vars, line) != width)
+		data->height++;
+		if (data->width == -1)
+			data->width = count(line);
+		else if (data->width != count(line))
 		{
-			free(line);
-			return (0);
+			ft_putstr_fd("INPUT: Invalid file\n", 2);
+			exit(1);
 		}
+		free(line);
+		line = get_next_line(fd);
+		if (errno)
+			input_error("INPUT");
 	}
 	close(fd);
-	return (width);
 }

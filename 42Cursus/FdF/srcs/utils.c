@@ -6,52 +6,38 @@
 /*   By: mzohraby <mzohraby@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 16:50:42 by mzohraby          #+#    #+#             */
-/*   Updated: 2025/03/25 12:56:46 by mzohraby         ###   ########.fr       */
+/*   Updated: 2025/03/31 16:10:44 by mzohraby         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-void	free_fdf(int **fdf, int n)
+void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
 {
-	int	i;
+	char	*dst;
 
-	if (n == -1)
+	if (x <= 0 || x >= WIDTH || y <= 0 || y >= HEIGHT)
 		return ;
-	i = 0;
-	while (i < n)
-	{
-		free(fdf[i]);
-		i++;
-	}
-	free(fdf);
+	dst = data->addr + (y * data->line_length + x * (data->bits_per_pixel / 8));
+	*(unsigned int *)dst = color;
 }
 
-void	free_split(char **nums)
+int	close_window_escape(int keycode, t_vars *vars)
 {
-	int	i;
-
-	i = 0;
-	while (nums[i])
+	if (keycode == ESC_KEY)
 	{
-		free(nums[i]);
-		i++;
+		free_mlx(vars);
+		free_fdf(vars->data.fdf, vars->data.height);
+		free_fdf(vars->data.colors, vars->data.height);
+		exit(0);
 	}
-	free(nums);
+	return (0);
 }
 
-void	free_mlx(t_vars *vars)
-{
-	mlx_destroy_image(vars->mlx, vars->data.img);
-	mlx_destroy_window(vars->mlx, vars->win);
-	mlx_destroy_display(vars->mlx);
-	free(vars->mlx);
-}
-
-void	exit_error(t_vars *vars, int n)
+int	close_window(t_vars *vars)
 {
 	free_mlx(vars);
-	free_fdf(vars->data.fdf, n);
-	perror("FdF");
-	exit(1);
+	free_fdf(vars->data.fdf, vars->data.height);
+	free_fdf(vars->data.colors, vars->data.height);
+	exit(0);
 }

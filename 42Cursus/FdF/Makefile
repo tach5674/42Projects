@@ -10,8 +10,12 @@ SRCS = $(SRC_FOLDER)/fdf.c \
 		$(SRC_FOLDER)/get_dims.c \
 		$(SRC_FOLDER)/utils.c \
 		$(SRC_FOLDER)/fill.c \
-		$(SRC_FOLDER)/draw_line.c
-		
+		$(SRC_FOLDER)/draw_line.c \
+		$(SRC_FOLDER)/atohex.c \
+		$(SRC_FOLDER)/error_handlers.c \
+		$(SRC_FOLDER)/cleanup_functions.c \
+		$(SRC_FOLDER)/hooks.c \
+		$(SRC_FOLDER)/draw.c
 
 OBJS = $(SRCS:.c=.o)
 
