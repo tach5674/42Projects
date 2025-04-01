@@ -6,7 +6,7 @@
 /*   By: mzohraby <mzohraby@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 11:46:58 by mzohraby          #+#    #+#             */
-/*   Updated: 2025/03/31 18:54:22 by mzohraby         ###   ########.fr       */
+/*   Updated: 2025/04/01 19:47:41 by mzohraby         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,17 +15,23 @@
 
 # include "libft.h"
 # include "mlx.h"
-# include "math.h"
-# include "fcntl.h"
+# include <math.h>
+# include <fcntl.h>
 # include <stdio.h>
+#include <errno.h>
 
-#include <errno.h> //??????????????
+# define PI 3.14159265358979323846
 
 # define ESC_KEY 65307
 # define LEFT 65361
 # define UP 65362
 # define RIGHT 65363
 # define DOWN 65364
+# define X 120
+# define Y 121
+# define Z 122
+# define R_LEFT 44
+# define R_RIGHT 46
 
 # define Q 113
 # define W 119
@@ -55,7 +61,6 @@ typedef struct s_data{
 	char	*input;
 	int		height;
 	int		width;
-	//int		depth;
 	float	offsetX;
 	float	offsetY;
 	float	targetOffsetX;
@@ -72,7 +77,9 @@ typedef struct s_data{
 	float	gamma;
 	int		x_key;
 	int		y_key;
-	int		z_key;	
+	int		z_key;
+	int		projection;
+	int		is_rotating;
 }	t_data;
 
 typedef struct s_vars{

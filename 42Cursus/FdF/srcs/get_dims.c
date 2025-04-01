@@ -6,11 +6,11 @@
 /*   By: mzohraby <mzohraby@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 16:48:44 by mzohraby          #+#    #+#             */
-/*   Updated: 2025/03/31 12:42:12 by mzohraby         ###   ########.fr       */
+/*   Updated: 2025/04/01 14:36:10 by mzohraby         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "fdf.h"
+#include "../includes/fdf.h"
 
 static int	count(char *line)
 {
@@ -57,6 +57,7 @@ void	get_dims(t_data *data)
 		else if (data->width != count(line))
 		{
 			ft_putstr_fd("INPUT: Invalid file\n", 2);
+			free(line);
 			exit(1);
 		}
 		free(line);

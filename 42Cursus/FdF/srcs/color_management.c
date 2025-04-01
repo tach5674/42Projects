@@ -6,11 +6,11 @@
 /*   By: mzohraby <mzohraby@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 13:25:06 by mzohraby          #+#    #+#             */
-/*   Updated: 2025/03/31 16:30:15 by mzohraby         ###   ########.fr       */
+/*   Updated: 2025/04/01 14:13:22 by mzohraby         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "fdf.h"
+#include "../includes/fdf.h"
 
 static float	get_fraction(float x1, float x2, float x)
 {

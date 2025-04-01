@@ -6,11 +6,11 @@
 /*   By: mzohraby <mzohraby@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/26 17:42:58 by mzohraby          #+#    #+#             */
-/*   Updated: 2025/03/31 16:29:46 by mzohraby         ###   ########.fr       */
+/*   Updated: 2025/04/01 14:13:27 by mzohraby         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "fdf.h"
+#include "../includes/fdf.h"
 
 static void	slope_bigger_then_one(int dx, int dy, t_point *a, t_vars *vars)
 {

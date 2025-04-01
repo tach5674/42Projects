@@ -6,18 +6,17 @@
 /*   By: mzohraby <mzohraby@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 11:40:59 by mzohraby          #+#    #+#             */
-/*   Updated: 2025/03/31 18:54:18 by mzohraby         ###   ########.fr       */
+/*   Updated: 2025/04/01 19:48:14 by mzohraby         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/fdf.h"
 
-static void	init(t_vars *vars, t_data *data, char *input)
+static void	init_fdf(t_data *data, char *input)
 {
 	data->input = input;
 	data->height = 0;
 	data->width = -1;
-	//data->depth = 0;
 	get_dims(data);
 	data->scale = (WIDTH + HEIGHT) / (data->width + data->height) * 0.25;
 	data->target_scale = (WIDTH + HEIGHT) / (data->width + data->height) * 0.25;
@@ -32,7 +31,13 @@ static void	init(t_vars *vars, t_data *data, char *input)
 	data->x_key = 0;
 	data->y_key = 0;
 	data->z_key = 0;
+	data->projection = 0;
+	data->is_rotating = 0;
 	fill_matrix(data, input);
+}
+
+static void	init_mlx(t_vars *vars, t_data *data)
+{
 	vars->mlx = mlx_init();
 	if (!vars->mlx)
 		mlx_error(vars);
@@ -62,10 +67,11 @@ int	main(int argc, char *argv[])
 		ft_putstr_fd("Error: usage ./fdf file.fdf\n", 2);
 		return (1);
 	}
-	init(&vars, &vars.data, argv[1]);
+	init_fdf(&vars.data, argv[1]);
+	init_mlx(&vars, &vars.data);
 	mlx_hook(vars.win, 2, 1L << 0, key_hook, &vars);
 	mlx_hook(vars.win, 17, 1l << 17, close_window, &vars);
-    mlx_hook(vars.win, 3, 1L << 1, key_release, &vars.data);
+	mlx_hook(vars.win, 3, 1L << 1, key_release, &vars.data);
 	mlx_mouse_hook(vars.win, mouse_hook, &vars);
 	mlx_loop_hook(vars.mlx, render_next_frame, &vars);
 	mlx_loop(vars.mlx);

@@ -6,11 +6,11 @@
 /*   By: mzohraby <mzohraby@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 13:00:39 by mzohraby          #+#    #+#             */
-/*   Updated: 2025/03/31 16:14:55 by mzohraby         ###   ########.fr       */
+/*   Updated: 2025/04/01 14:13:41 by mzohraby         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "fdf.h"
+#include "../includes/fdf.h"
 
 static void	set_num_color(t_data *data, char **nums, int i, int j)
 {

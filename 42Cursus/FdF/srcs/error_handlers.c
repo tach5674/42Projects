@@ -6,11 +6,11 @@
 /*   By: mzohraby <mzohraby@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 16:00:30 by mzohraby          #+#    #+#             */
-/*   Updated: 2025/03/31 16:04:45 by mzohraby         ###   ########.fr       */
+/*   Updated: 2025/04/01 14:13:36 by mzohraby         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "fdf.h"
+#include "../includes/fdf.h"
 
 void	input_error(char *msg)
 {

@@ -6,11 +6,11 @@
 /*   By: mzohraby <mzohraby@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 16:50:42 by mzohraby          #+#    #+#             */
-/*   Updated: 2025/03/31 18:39:10 by mzohraby         ###   ########.fr       */
+/*   Updated: 2025/04/01 14:12:54 by mzohraby         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "fdf.h"
+#include "../includes/fdf.h"
 
 void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
 {

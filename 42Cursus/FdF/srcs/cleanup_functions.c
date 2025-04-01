@@ -6,11 +6,11 @@
 /*   By: mzohraby <mzohraby@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 16:01:59 by mzohraby          #+#    #+#             */
-/*   Updated: 2025/03/31 16:02:14 by mzohraby         ###   ########.fr       */
+/*   Updated: 2025/04/01 14:13:11 by mzohraby         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "fdf.h"
+#include "../includes/fdf.h"
 
 void	free_fdf(int **fdf, int n)
 {
