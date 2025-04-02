@@ -6,7 +6,7 @@
 /*   By: mzohraby <mzohraby@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 11:40:59 by mzohraby          #+#    #+#             */
-/*   Updated: 2025/04/01 19:48:14 by mzohraby         ###   ########.fr       */
+/*   Updated: 2025/04/02 16:32:24 by mzohraby         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,8 @@ static void	init_fdf(t_data *data, char *input)
 	data->width = -1;
 	get_dims(data);
 	data->scale = (WIDTH + HEIGHT) / (data->width + data->height) * 0.25;
-	data->target_scale = (WIDTH + HEIGHT) / (data->width + data->height) * 0.25;
-	data->offsetX = WIDTH / 2 - (data->width * data->scale) / 4;
-	data->offsetY = HEIGHT / 2 - (data->height * data->scale) / 4;
-	data->targetOffsetX = WIDTH / 2 - (data->width * data->scale) / 4;
-	data->targetOffsetY = HEIGHT / 2 - (data->height * data->scale) / 4;
+	data->offset_x = WIDTH / 2 - (data->width * data->scale) / 4;
+	data->offset_y = HEIGHT / 2 - (data->height * data->scale) / 4;
 	data->needs_update = 1;
 	data->alpha = 0;
 	data->betta = 0;
@@ -32,7 +29,9 @@ static void	init_fdf(t_data *data, char *input)
 	data->y_key = 0;
 	data->z_key = 0;
 	data->projection = 0;
-	data->is_rotating = 0;
+	data->is_rotating_x = 0;
+	data->is_rotating_y = 0;
+	data->is_rotating_z = 0;
 	fill_matrix(data, input);
 }
 

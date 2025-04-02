@@ -1,5 +1,5 @@
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -Ilibft -Iincludes -Imlx_linux
+CFLAGS = -Wall -Wextra -Werror
 
 SRC_FOLDER = srcs
 OBJ_FOLDER = srcs
@@ -8,17 +8,17 @@ SRCS = $(SRC_FOLDER)/fdf.c \
 		$(SRC_FOLDER)/color_encoder_decoder.c \
 		$(SRC_FOLDER)/color_management.c \
 		$(SRC_FOLDER)/get_dims.c \
-		$(SRC_FOLDER)/utils.c \
 		$(SRC_FOLDER)/fill.c \
 		$(SRC_FOLDER)/draw_line.c \
-		$(SRC_FOLDER)/atohex.c \
+		$(SRC_FOLDER)/atoi_hex.c \
 		$(SRC_FOLDER)/error_handlers.c \
 		$(SRC_FOLDER)/cleanup_functions.c \
 		$(SRC_FOLDER)/hooks.c \
 		$(SRC_FOLDER)/draw.c \
 		$(SRC_FOLDER)/hook_handlers.c \
-		$(SRC_FOLDER)/rotations.c
-
+		$(SRC_FOLDER)/rotations.c \
+		$(SRC_FOLDER)/key_hooks.c \
+		$(SRC_FOLDER)/projections.c	
 
 OBJS = $(SRCS:.c=.o)
 
@@ -32,7 +32,7 @@ $(LIBFT):
 	$(MAKE) -C libft
 
 $(NAME): $(LIBFT) $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) -Llibft -lft -Lmlx_linux -lmlx_Linux -L/usr/lib -lXext -lX11 -lm -lz -O3 -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJS) -Llibft -lft -Lminilibx-linux -lmlx_Linux -L/usr/lib -lXext -lX11 -lm -lz -O3 -o $(NAME)
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@

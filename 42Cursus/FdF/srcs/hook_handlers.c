@@ -6,34 +6,46 @@
 /*   By: mzohraby <mzohraby@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 16:36:12 by mzohraby          #+#    #+#             */
-/*   Updated: 2025/04/01 15:29:03 by mzohraby         ###   ########.fr       */
+/*   Updated: 2025/04/02 16:32:41 by mzohraby         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/fdf.h"
 
-int	smooth_zoom(t_vars *vars)
+void	draw_instructions(t_vars *vars)
 {
-	vars->data.scale = vars->data.scale * 0.2 + vars->data.target_scale * 0.8;
-	if (fabs(vars->data.scale - vars->data.target_scale) < 0.01)
-		vars->data.scale = vars->data.target_scale;
-	if (vars->data.scale != vars->data.target_scale)
-		vars->data.needs_update = 1;
-	return (0);
+	mlx_string_put(vars->mlx, vars->win, 5, 80, 0xFFFFFF,
+		"Isometric projection: key 0");
+	mlx_string_put(vars->mlx, vars->win, 5, 60, 0xFFFFFF,
+		"Parallel projections: keys 1-3");
+	mlx_string_put(vars->mlx, vars->win, 5, 120, 0xFFFFFF,
+		"TPP projection: keys 4");
+	mlx_string_put(vars->mlx, vars->win, 5, 100, 0xFFFFFF,
+		"Oblique projection: key 5");
+	mlx_string_put(vars->mlx, vars->win, 5, 20, 0xFFFFFF,
+		"Translate: arrow keys");
+	mlx_string_put(vars->mlx, vars->win, 5, 40, 0xFFFFFF,
+		"Zoom: mouse wheel up/down");
+	mlx_string_put(vars->mlx, vars->win, 5, 140, 0xFFFFFF,
+		"Rotations: x / y / z + < / >");
+	mlx_string_put(vars->mlx, vars->win, 5, 160, 0xFFFFFF,
+		"Auto rotations: q / w / e");
+	mlx_string_put(vars->mlx, vars->win, 5, 180, 0xFFFFFF,
+		"Exit: escape key");
 }
 
-int	smooth_translate(t_vars *vars)
+void	close_window_escape(t_vars *vars)
 {
-	vars->data.offsetX = vars->data.offsetX * 0.2
-		+ vars->data.targetOffsetX * 0.8;
-	vars->data.offsetY = vars->data.offsetY * 0.2
-		+ vars->data.targetOffsetY * 0.8;
-	if (fabs(vars->data.offsetX - vars->data.targetOffsetX) < 0.5)
-		vars->data.offsetX = vars->data.targetOffsetX;
-	if (fabs(vars->data.offsetY - vars->data.targetOffsetY) < 0.5)
-		vars->data.offsetY = vars->data.targetOffsetY;
-	if (vars->data.offsetX != vars->data.targetOffsetX
-		|| vars->data.offsetY != vars->data.targetOffsetY)
-		vars->data.needs_update = 1;
-	return (0);
+	free_mlx(vars);
+	free_fdf(vars->data.fdf, vars->data.height);
+	free_fdf(vars->data.colors, vars->data.height);
+	exit(0);
+}
+
+int	close_window(t_vars *vars)
+{
+	free_mlx(vars);
+	free_fdf(vars->data.fdf, vars->data.height);
+	free_fdf(vars->data.colors, vars->data.height);
+	exit(0);
 }

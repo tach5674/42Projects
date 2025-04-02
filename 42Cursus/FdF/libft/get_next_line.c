@@ -6,7 +6,7 @@
 /*   By: mzohraby <mzohraby@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/24 12:15:05 by mzohraby          #+#    #+#             */
-/*   Updated: 2025/03/25 12:55:46 by mzohraby         ###   ########.fr       */
+/*   Updated: 2025/04/02 12:44:10 by mzohraby         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,18 +78,22 @@ static char	*read_extract(char **container, int fd, int n, size_t i)
 
 char	*get_next_line(int fd)
 {
-	static char	*container[OPEN_MAX];
+	static char	*container;
 	int			n;
 
 	if (fd < 0 || fd >= OPEN_MAX || BUFFER_SIZE < 1)
-		return (NULL);
-	n = 1;
-	if (!(container[fd]))
 	{
-		container[fd] = malloc(1);
-		if (!(container[fd]))
-			return (NULL);
-		container[fd][0] = '\0';
+		if (container)
+			free(container);
+		return (NULL);
 	}
-	return (read_extract(&(container[fd]), fd, n, 0));
+	n = 1;
+	if (!container)
+	{
+		container = malloc(1);
+		if (!container)
+			return (NULL);
+		container[0] = '\0';
+	}
+	return (read_extract(&container, fd, n, 0));
 }

@@ -6,7 +6,7 @@
 /*   By: mzohraby <mzohraby@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 13:00:39 by mzohraby          #+#    #+#             */
-/*   Updated: 2025/04/01 14:13:41 by mzohraby         ###   ########.fr       */
+/*   Updated: 2025/04/02 16:46:04 by mzohraby         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static void	set_num_color(t_data *data, char **nums, int i, int j)
 		((data->fdf))[i][j] = atoi(num_color[0]);
 		if (num_color[1] && ft_strchr(num_color[1], '\n'))
 			*ft_strchr(num_color[1], '\n') = '\0';
-		color = atohex(num_color[1]);
+		color = atoi_hex(num_color[1]);
 		if (color == -1)
 		{
 			if (data->fdf[i][j] != 0)
@@ -65,6 +65,7 @@ static void	fill_helper(t_data *data, int fd)
 		free(line);
 		free_split(nums);
 	}
+	get_next_line(-1);
 }
 
 void	fill_matrix(t_data *data, char *input)
@@ -83,5 +84,6 @@ void	fill_matrix(t_data *data, char *input)
 	if (!(data->colors))
 		fill_error(data, 0, -1);
 	fill_helper(data, fd);
-	close(fd);
+	if (close(fd) == -1)
+		fill_error(data, 0, 0);
 }

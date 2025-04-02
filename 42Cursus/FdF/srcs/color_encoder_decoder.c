@@ -6,11 +6,11 @@
 /*   By: mzohraby <mzohraby@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 13:12:13 by mzohraby          #+#    #+#             */
-/*   Updated: 2025/03/20 13:43:01 by mzohraby         ###   ########.fr       */
+/*   Updated: 2025/04/02 17:02:24 by mzohraby         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "fdf.h"
+#include "../includes/fdf.h"
 
 int	create_trgb(int t, int r, int g, int b)
 {

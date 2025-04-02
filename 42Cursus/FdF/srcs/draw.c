@@ -6,13 +6,23 @@
 /*   By: mzohraby <mzohraby@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/31 16:11:37 by mzohraby          #+#    #+#             */
-/*   Updated: 2025/04/01 19:43:07 by mzohraby         ###   ########.fr       */
+/*   Updated: 2025/04/02 16:21:47 by mzohraby         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/fdf.h"
 
-void	clear(t_vars *vars)
+void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
+{
+	char	*dst;
+
+	if (x <= 0 || x >= WIDTH || y <= 0 || y >= HEIGHT)
+		return ;
+	dst = data->addr + (y * data->line_length + x * (data->bits_per_pixel / 8));
+	*(unsigned int *)dst = color;
+}
+
+static void	clear(t_vars *vars)
 {
 	int			i;
 	int			j;
@@ -30,63 +40,7 @@ void	clear(t_vars *vars)
 	}
 }
 
-void	isometric(t_point *a)
-{
-	int		temp;
-
-	temp = a->x;
-	a->x = (temp - a->y) * cos(0.6);
-	a->y = (temp + a->y) * sin(0.6) - a->z;
-}
-
-void	oblique(t_point *a)
-{
-	a->x = a->x + a->z / 2 * cos(0.8);
-	a->y = a->y + a->z / 2 * cos(0.8);
-}
-
-void	TPP(t_data *data, t_point *a)
-{
-	int	d;
-
-	d = (data->width + data->height) / 2 * 100;
-	
-	a->x = a->x * d / (-a->z + d + 1e-10);
-	a->y = a->y * d / (-a->z + d + 1e-10);
-}
-
-void	barrel_distortion(t_point *a)
-{
-    int r;
-	int	k;
-
-	k = 0.8;
-	r = sqrt(a->x * a->x + a->y * a->y);
-    a->x = a->x * (1 + k * r * r);
-    a->y = a->y * (1 + k * r * r);
-}
-
-void	perspective(t_data *data, t_point *a)
-{
-	a->x = a->x / (2 + a->z / data->scale * 0.1);
-	a-> y = a->y / (2 + a->z / data->scale * 0.1);
-}
-
-void	apply_projection(t_vars *vars, t_point *a)
-{
-	if (vars->data.projection == 1)
-		barrel_distortion(a);
-	else if (vars->data.projection == 2)
-		TPP(&vars->data, a);
-	else if (vars->data.projection == 3)
-		oblique(a);
-	else if (vars->data.projection == 4)
-		perspective(&vars->data, a);
-	else
-		isometric(a);
-}
-
-void	set_point(t_vars *vars, t_point *a, int i, int j)
+static void	set_point(t_vars *vars, t_point *a, int i, int j)
 {
 	a->color = vars->data.colors[j][i];
 	a->x = i;
@@ -99,8 +53,8 @@ void	set_point(t_vars *vars, t_point *a, int i, int j)
 	rotate_y(&vars->data, a);
 	rotate_z(&vars->data, a);
 	apply_projection(vars, a);
-	a->x += vars->data.offsetX;
-	a->y += vars->data.offsetY;
+	a->x += vars->data.offset_x;
+	a->y += vars->data.offset_y;
 }
 
 static int	in_window(t_point *a, t_point *b)

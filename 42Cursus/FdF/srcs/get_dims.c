@@ -6,7 +6,7 @@
 /*   By: mzohraby <mzohraby@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 16:48:44 by mzohraby          #+#    #+#             */
-/*   Updated: 2025/04/01 14:36:10 by mzohraby         ###   ########.fr       */
+/*   Updated: 2025/04/02 16:28:51 by mzohraby         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,14 +38,10 @@ static int	count(char *line)
 	return (count);
 }
 
-void	get_dims(t_data *data)
+static void	get_dims_helper(t_data *data, int fd)
 {
-	int		fd;
 	char	*line;
 
-	fd = open(data->input, O_RDONLY);
-	if (fd == -1)
-		input_error("INPUT");
 	line = get_next_line(fd);
 	if (errno)
 		input_error("INPUT");
@@ -65,5 +61,16 @@ void	get_dims(t_data *data)
 		if (errno)
 			input_error("INPUT");
 	}
-	close(fd);
+}
+
+void	get_dims(t_data *data)
+{
+	int		fd;
+
+	fd = open(data->input, O_RDONLY);
+	if (fd == -1)
+		input_error("INPUT");
+	get_dims_helper(data, fd);
+	if (close(fd) == -1)
+		input_error("INPUT");
 }

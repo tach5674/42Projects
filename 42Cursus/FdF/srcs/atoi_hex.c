@@ -6,7 +6,7 @@
 /*   By: mzohraby <mzohraby@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/27 14:02:42 by mzohraby          #+#    #+#             */
-/*   Updated: 2025/04/01 14:13:17 by mzohraby         ###   ########.fr       */
+/*   Updated: 2025/04/02 16:45:44 by mzohraby         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ static int	convert(char *str, char *hexl, char *hexu)
 	return (res);
 }
 
-int	atohex(char *str)
+int	atoi_hex(char *str)
 {
 	char	*hexl;
 	char	*hexu;

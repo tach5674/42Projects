@@ -6,19 +6,19 @@
 /*   By: mzohraby <mzohraby@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/20 11:46:58 by mzohraby          #+#    #+#             */
-/*   Updated: 2025/04/01 19:47:41 by mzohraby         ###   ########.fr       */
+/*   Updated: 2025/04/02 17:29:15 by mzohraby         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FDF_H
 # define FDF_H
 
-# include "libft.h"
-# include "mlx.h"
 # include <math.h>
 # include <fcntl.h>
+# include <errno.h>
 # include <stdio.h>
-#include <errno.h>
+# include "../minilibx-linux/mlx.h"
+# include "../libft/libft.h"
 
 # define PI 3.14159265358979323846
 
@@ -43,11 +43,11 @@
 # define HEIGHT 1080
 # define WIDTH 1920
 
-typedef	struct s_point{
+typedef struct s_point{
 	int	x;
 	int	y;
 	int	z;
-	int color;
+	int	color;
 }	t_point;
 
 typedef struct s_data{
@@ -61,12 +61,9 @@ typedef struct s_data{
 	char	*input;
 	int		height;
 	int		width;
-	float	offsetX;
-	float	offsetY;
-	float	targetOffsetX;
-	float	targetOffsetY;
+	float	offset_x;
+	float	offset_y;
 	float	scale;
-	float	target_scale;
 	t_point	a;
 	t_point	b;
 	int		x1;
@@ -79,7 +76,9 @@ typedef struct s_data{
 	int		y_key;
 	int		z_key;
 	int		projection;
-	int		is_rotating;
+	int		is_rotating_x;
+	int		is_rotating_y;
+	int		is_rotating_z;
 }	t_data;
 
 typedef struct s_vars{
@@ -88,53 +87,55 @@ typedef struct s_vars{
 	t_data	data;
 }	t_vars;
 
+//COLOR MANAGEMENT
 int		create_trgb(int t, int r, int g, int b);
 int		get_t(int trgb);
 int		get_r(int trgb);
 int		get_g(int trgb);
 int		get_b(int trgb);
 
+//INIT FUNCTIONS
 void	get_dims(t_data *data);
 void	fill_matrix(t_data *data, char *input);
+int		atoi_hex(char *str);
 
+//CLEANUP FUNCTIONS
 void	free_split(char **nums);
 void	free_fdf(int **fdf, int n);
 void	free_mlx(t_vars *vars);
 
+//ERROR FUNCTIONS
 void	input_error(char *msg);
 void	fill_error(t_data *data, int n, int m);
 void	mlx_error(t_vars *vars);
 
-void	my_mlx_pixel_put(t_data *data, int x, int y, int color);
-void	bresenham(t_vars *vars);
-
-int		atohex(char *str);
-
-int		get_color(t_data *data);
-
+//HOOKS
 int		key_hook(int keycode, t_vars *vars);
 int		mouse_hook(int button, int x, int y, t_vars *vars);
-int		key_press(int keycode, t_data *data);
 int		key_release(int keycode, t_data *data);
-int		smooth_zoom(t_vars *vars);
-int		smooth_translate(t_vars *vars);
 int		render_next_frame(t_vars *vars);
 
-void    rotate_x(t_data * data, t_point *a);
-void    rotate_y(t_data * data, t_point *a);
-void    rotate_z(t_data * data, t_point *a);
-
+//HOOK HANDLERS
+void	draw_instructions(t_vars *vars);
 int		close_window(t_vars *vars);
 void	close_window_escape(t_vars *vars);
 
-void	my_mlx_pixel_put(t_data *data, int x, int y, int color);
+//ROTATIONS
+void	rotate_x(t_data *data, t_point *a);
+void	rotate_y(t_data *data, t_point *a);
+void	rotate_z(t_data *data, t_point *a);
 
-void	clear(t_vars *vars);
-
+//PROJECTIONS
 void	isometric(t_point *a);
+void	oblique(t_point *a);
+void	tpp(t_data *data, t_point *a);
+void	parallel(t_point *a, int check);
+void	apply_projection(t_vars *vars, t_point *a);
 
-void	set_point(t_vars *vars, t_point *a, int i, int j);
-
+//DRAWING FUNCTIONS
+void	my_mlx_pixel_put(t_data *data, int x, int y, int color);
+int		get_color(t_data *data);
+void	bresenham(t_vars *vars);
 int		draw(t_vars *vars, int i, int j);
 
 #endif
