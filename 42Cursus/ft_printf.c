@@ -47,17 +47,11 @@ int ft_printf(char *fmt, ...)
 		if (check)
 		{
 			if (*fmt == 'd')
-			{
 				count += d_case(va_arg(args, int));
-			}
 			else if (*fmt == 's')
-			{
 				count += s_case(va_arg(args, const char *));
-			}
 			else if (*fmt == 'x')
-			{
 				count += x_case(va_arg(args, unsigned int));
-			}
 			check = 0;
 		}
 		else

@@ -78,6 +78,12 @@ char *get_next_line(int fd)
 					container = NULL;
 					return NULL;
 				}
+				if (container[i + 1] == '\0')
+				{
+					free(container);
+					container = NULL;
+					return res;
+				}
 				temp = ft_strdup(container + i + 1, ft_strlen(container + i + 1));
 				if (!temp)
 				{
@@ -105,7 +111,7 @@ char *get_next_line(int fd)
 				res = ft_strdup(container, ft_strlen(container));
 				free(container);
 				container = NULL;
-				if (!res)	
+				if (!res)
 					return NULL;
 				return res;
 			}
@@ -124,7 +130,11 @@ char *get_next_line(int fd)
 				container = temp;
 			}
 			else
+			{
 				container = ft_strdup(buffer, ft_strlen(buffer));
+				if (!container)
+					return NULL;
+			}
 		}
 	}
 	return NULL;
