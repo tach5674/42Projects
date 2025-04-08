@@ -75,6 +75,7 @@ int	fill_table(t_table *table, int argc, char *argv[])
 	if (!fits_integer(argc, argv))
 		return (0);
 	table->simulation_over = 0;
+	table->has_to_eat = -1;
 	table->n = ft_atoi(argv[1]);
 	if (table->n <= 0)
 		return (0);
