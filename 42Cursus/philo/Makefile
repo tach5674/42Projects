@@ -1,7 +1,7 @@
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
 
-SRCS = philosophers.c utils.c
+SRCS = philosophers.c utils.c init.c
 
 OBJS = $(SRCS:.c=.o)
 

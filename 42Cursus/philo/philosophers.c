@@ -6,106 +6,190 @@
 /*   By: mzohraby <mzohraby@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 14:12:55 by mzohraby          #+#    #+#             */
-/*   Updated: 2025/04/06 13:49:54 by mzohraby         ###   ########.fr       */
+/*   Updated: 2025/04/08 18:15:22 by mzohraby         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-int	validation(int argc, char *argv[])
+void print_msg(char *msg, t_philo *philo)
 {
-	if (argc < 5 || argc > 6)
+	pthread_mutex_lock(&philo->table->simulation_mutex);
+	if (philo->table->simulation_over)
 	{
-		ft_putstr_fd("Invalid arguments\n", 2);
-		return (1);
+		pthread_mutex_unlock(&philo->table->simulation_mutex);
+		return ;
 	}
-	while (argc--)
+	pthread_mutex_unlock(&philo->table->simulation_mutex);
+	pthread_mutex_lock(&philo->table->write_mutex);
+	ft_putnbr_fd(get_time() - philo->table->start_time, 1);
+	ft_putstr_fd(" ", 1);
+	ft_putnbr_fd(philo->id, 1);
+	ft_putstr_fd(msg, 1);
+	pthread_mutex_unlock(&philo->table->write_mutex);
+}
+
+void	philosopher_odd(t_philo *self)
+{
+	while (1)
 	{
-		if (ft_atoi(argv[argc]) < 0)
+		pthread_mutex_lock(self->left);
+		print_msg(" has taken a fork\n", self);
+		pthread_mutex_lock(self->right);
+		print_msg(" has taken a fork\n", self);
+		print_msg(" is eating\n", self);
+		pthread_mutex_lock(&self->table->meal_mutex);
+		self->last_meal_time = get_time();
+		pthread_mutex_unlock(&self->table->meal_mutex);
+		usleep(self->table->time_to_eat);
+		pthread_mutex_unlock(self->left);
+		pthread_mutex_unlock(self->right);
+		print_msg(" is sleeping\n", self);
+		usleep(self->table->time_to_sleep);
+		print_msg(" is thinking\n", self);
+		usleep(self->table->time_to_sleep);
+		pthread_mutex_lock(&self->table->simulation_mutex);
+		if (self->table->simulation_over)
 		{
-			ft_putstr_fd("Invalid arguments\n", 2);
-			return (1);
+			pthread_mutex_unlock(&self->table->simulation_mutex);
+			return ;
 		}
+		pthread_mutex_unlock(&self->table->simulation_mutex);
 	}
-	return (0);
 }
 
-void	*philosopher_thread(void *self)
+void	philosopher_even(t_philo *self)
 {
-	return (self);
-}
-
-int	init(int n, t_philosopher *philosophers, pthread_mutex_t *forks, pthread_t *threads)
-{
-	int	i;
-
-	philosophers = malloc(n * sizeof(t_philosopher));
-	if (!philosophers)
-		return (0);
-	forks = malloc(n * sizeof(pthread_mutex_t));
-	if (!forks)
+	while (1)
 	{
-		free(philosophers);
-		return (0);
+		pthread_mutex_lock(self->right);
+		print_msg(" has taken a fork\n", self);
+		pthread_mutex_lock(self->left);
+		print_msg(" has taken a fork\n", self);
+		print_msg(" is eating\n", self);
+		pthread_mutex_lock(&self->table->meal_mutex);
+		self->last_meal_time = get_time();
+		pthread_mutex_unlock(&self->table->meal_mutex);
+		usleep(self->table->time_to_eat);
+		pthread_mutex_unlock(self->left);
+		pthread_mutex_unlock(self->right);
+		print_msg(" is sleeping\n", self);
+		usleep(self->table->time_to_sleep);
+		print_msg(" is thinking\n", self);
+		usleep(self->table->time_to_sleep);
+		pthread_mutex_lock(&self->table->simulation_mutex);
+		if (self->table->simulation_over)
+		{
+			pthread_mutex_unlock(&self->table->simulation_mutex);
+			return ;
+		}
+		pthread_mutex_unlock(&self->table->simulation_mutex);
 	}
-	threads = malloc(n * sizeof(pthread_t));
-	if (!threads)
-	{
-		free(philosophers);
-		free(forks);
-		return (0);
-	}
-	i = -1;
-	return (0);
 }
 
-void	setup(int argc, char *argv[], t_philosopher *philosophers, pthread_mutex_t *forks)
+void	*philosopher_thread(void *philo)
 {
-	int	i;
-	int	n;
+	t_philo	*self;
 	
-	n = ft_atoi(argv[1]);
-	i = -1;
-	while (++i < n)
-		pthread_mutex_init(&forks[i], NULL);
-	i = -1;
-	while (++i < n)
+	self = philo;
+	
+	if (self->id % 2)
+		philosopher_odd(self);
+	else
+		philosopher_even(self);
+	return (NULL);
+}
+
+int	check_if_dead(t_table *table)
+{
+	int	i;
+
+	i = 0;
+	while (i < table->n)
 	{
-		philosophers[i].id = i;
-		if (argc == 6)
-			philosophers[i].needs_to_eat = ft_atoi(argv[5]);
-		else
-			philosophers[i].needs_to_eat = -1;
-		philosophers[i].left = &forks[i % n];
-		philosophers[i].left = &forks[(i + 1) % n];
-		philosophers[i].time_to_eat = ft_atoi(argv[3]);
-		philosophers[i].time_to_sleep = ft_atoi(argv[4]);
+		if (get_time() - table->philos->last_meal_time >= table->time_to_die / 1000)
+			return (i % table->n + 1);
+		i++; 
 	}
+	return (0);
+}
+
+void	*death_monitor(void *t)
+{
+	t_table	*table;
+	int		id;
+	
+	table = t;
+	while (1)
+	{
+		pthread_mutex_lock(&table->meal_mutex);
+		id = check_if_dead(table);
+		pthread_mutex_unlock(&table->meal_mutex);
+		if (id)
+		{
+			pthread_mutex_lock(&table->simulation_mutex);
+			table->simulation_over = 1;
+			pthread_mutex_unlock(&table->simulation_mutex);
+			pthread_mutex_lock(&table->write_mutex);
+			ft_putnbr_fd(get_time() - table->start_time, 1);
+			ft_putstr_fd(" ", 1);
+			ft_putnbr_fd(id, 1);
+			ft_putstr_fd(" died\n", 1);
+			pthread_mutex_unlock(&table->write_mutex);
+			return (NULL);
+		}
+		usleep(1000);
+	}
+}
+
+int	simulation_start(t_table *table)
+{
+	int	i;
+
+	i = 0;
+	while (i < table->n)
+	{
+		table->start_time = get_time();
+		table->philos->last_meal_time = get_time();
+		if (pthread_create(&(table->philos[i].thread), NULL, philosopher_thread, &table->philos[i]))
+		{
+			free(table->forks);
+			free(table->philos);
+			return (0);
+		}	
+		i++;
+	}
+	if (pthread_create(&(table->death_monitor), NULL, death_monitor, table))
+	{
+		free(table->forks);
+		free(table->philos);
+		return (0);
+	}	
+	return (1);
+}
+
+int	simulation_end(t_table *table)
+{
+	int	i;
+
+	i = 0;
+	while (i < table->n)
+	{
+		pthread_join(table->philos[i].thread, NULL);
+		i++;
+	}
+	pthread_join(table->death_monitor, NULL);
+	return (1);
 }
 
 int	main(int argc, char *argv[])
 {
-	t_philosopher	*philosophers;
-	pthread_mutex_t	*forks;
-	pthread_t		*threads;
-	int				i;
-	int				n;
+	t_table	table;
 	
-	if (validation(argc, argv))
-		return (0);
-	n = ft_atoi(argv[1]);
-	if (n == 0)
-		return (0);
-	init(argv[1], philosophers, forks, threads);
-	i = -1;
-	while (++i < n)
-	{
-		if (pthread_create(&threads[i], NULL, philosopher_thread, &philosophers[i]) != 0)
-		{
-			return exit_error();
-		}
-		
-	}
-	join_threads(threads, n);
-	return (0);
+	if (!init(&table, argc, argv))
+		return (EXIT_FAILURE);
+	if (!simulation_start(&table))
+		return (EXIT_FAILURE);
+	if (!simulation_end(&table))
+		return (EXIT_FAILURE);
 }
