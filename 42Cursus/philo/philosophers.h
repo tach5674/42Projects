@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosophers.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mzohraby <mzohraby@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mikayel <mikayel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/06 12:39:57 by mzohraby          #+#    #+#             */
-/*   Updated: 2025/04/08 17:56:02 by mzohraby         ###   ########.fr       */
+/*   Updated: 2025/04/09 15:43:53 by mikayel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include <pthread.h>
 # include <stdlib.h>
+# include <stdio.h>
 # include <sys/time.h>
 # include <unistd.h>
 
@@ -48,19 +49,18 @@ typedef struct s_philo
 	t_table				*table;
 }						t_philo;
 
+int						init(t_table *table, int argc, char *argv[]);
+
+void					*philosopher_thread(void *philo);
+void					*monitor(void *t);
+
+void					destroy_mutexes(t_table *table, int n);
+void					join_threads(t_table *table, int n);
+
 int						ft_strlen(const char *s);
-void					ft_putstr_fd(char *s, int fd);
-void					ft_putnbr_fd(int n, int fd);
 int						ft_strcmp(const char *s1, const char *s2);
 int						ft_atoi(const char *str);
 int						get_time(void);
-
-void					destroy_mutexes(t_table *table, int n);
-
 int						fits_integer(int argc, char *argv[]);
-int						mutex_init(t_table *table);
-void					philos_init(t_table *table);
-int						fill_table(t_table *table, int argc, char *argv[]);
-int						init(t_table *table, int argc, char *argv[]);
 
 #endif

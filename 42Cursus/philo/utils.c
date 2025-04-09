@@ -3,19 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mzohraby <mzohraby@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mikayel <mikayel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/06 12:23:29 by mzohraby          #+#    #+#             */
-/*   Updated: 2025/04/08 15:54:04 by mzohraby         ###   ########.fr       */
+/*   Updated: 2025/04/09 15:32:55 by mikayel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
-
-void	ft_putstr_fd(char *s, int fd)
-{
-	write(fd, s, ft_strlen(s));
-}
 
 int	ft_strlen(const char *s)
 {
@@ -59,41 +54,25 @@ int	ft_atoi(const char *str)
 	return (num);
 }
 
-static void	recursive(int n, int fd)
-{
-	char	c;
-
-	if (n == 0)
-		return ;
-	recursive(n / 10, fd);
-	c = n % 10 + '0';
-	write(fd, &c, 1);
-}
-
-void	ft_putnbr_fd(int n, int fd)
-{
-	if (n == -2147483648)
-	{
-		write(fd, "-2147483648", 11);
-		return ;
-	}
-	if (n < 0)
-	{
-		n = -n;
-		write(fd, "-", 1);
-	}
-	if (n == 0)
-	{
-		write(fd, "0", 1);
-		return ;
-	}
-	recursive(n, fd);
-}
-
 int	get_time(void)
 {
 	struct timeval	time;
 
 	gettimeofday(&time, NULL);
 	return ((time.tv_sec * (int)1000) + (time.tv_usec / 1000));
+}
+
+int	fits_integer(int argc, char *argv[])
+{
+	int	i;
+
+	i = 1;
+	while (i < argc)
+	{
+		if (ft_strlen(argv[i]) > 10 || (ft_strlen(argv[i]) == 10
+				&& ft_strcmp(argv[i], "2147483647") > 0))
+			return (0);
+		i++;
+	}
+	return (1);
 }

@@ -3,31 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mzohraby <mzohraby@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mikayel <mikayel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 14:46:34 by mzohraby          #+#    #+#             */
-/*   Updated: 2025/04/08 17:58:58 by mzohraby         ###   ########.fr       */
+/*   Updated: 2025/04/09 15:35:07 by mikayel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-int	fits_integer(int argc, char *argv[])
-{
-	int	i;
-
-	i = 1;
-	while (i < argc)
-	{
-		if (ft_strlen(argv[i]) > 10 || (ft_strlen(argv[i]) == 10
-				&& ft_strcmp(argv[i], "2147483647") > 0))
-			return (0);
-		i++;
-	}
-	return (1);
-}
-
-int	mutex_init(t_table *table)
+static int mutex_init_helper(t_table *table)
 {
 	int	i;
 
@@ -35,18 +20,33 @@ int	mutex_init(t_table *table)
 	while (i < table->n)
 	{
 		if (pthread_mutex_init(&table->forks[i], NULL))
+		{
+			destroy_mutexes(table, i);
 			return (0);
+		}
 		i++;
 	}
-	if (pthread_mutex_init(&table->meal_mutex, NULL))
+	return (1);
+}
+
+static int	mutex_init(t_table *table)
+{
+	if (!mutex_init_helper(table))
 		return (0);
+	if (pthread_mutex_init(&table->meal_mutex, NULL))
+	{
+		destroy_mutexes(table, table->n);
+		return (0);
+	}
     if (pthread_mutex_init(&table->simulation_mutex, NULL))
     {
+		destroy_mutexes(table, table->n);
         pthread_mutex_destroy(&table->meal_mutex);
 		return (0);
     }
 	if (pthread_mutex_init(&table->write_mutex, NULL))
 	{
+		destroy_mutexes(table, table->n);
 		pthread_mutex_destroy(&table->meal_mutex);
         pthread_mutex_destroy(&table->simulation_mutex);
 		return (0);
@@ -54,7 +54,7 @@ int	mutex_init(t_table *table)
 	return (1);
 }
 
-void	philos_init(t_table *table)
+static void	philos_init(t_table *table)
 {
 	int	i;
 
@@ -70,12 +70,12 @@ void	philos_init(t_table *table)
 	}
 }
 
-int	fill_table(t_table *table, int argc, char *argv[])
+static int	fill_table(t_table *table, int argc, char *argv[])
 {
 	if (!fits_integer(argc, argv))
 		return (0);
 	table->simulation_over = 0;
-	table->has_to_eat = -1;
+	table->has_to_eat = 0;
 	table->n = ft_atoi(argv[1]);
 	if (table->n <= 0)
 		return (0);
