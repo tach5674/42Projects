@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mikayel <mikayel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mzohraby <mzohraby@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 14:46:34 by mzohraby          #+#    #+#             */
-/*   Updated: 2025/04/09 15:35:07 by mikayel          ###   ########.fr       */
+/*   Updated: 2025/04/11 12:45:24 by mzohraby         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-static int mutex_init_helper(t_table *table)
+static int	mutex_init_helper(t_table *table)
 {
 	int	i;
 
@@ -38,17 +38,17 @@ static int	mutex_init(t_table *table)
 		destroy_mutexes(table, table->n);
 		return (0);
 	}
-    if (pthread_mutex_init(&table->simulation_mutex, NULL))
-    {
+	if (pthread_mutex_init(&table->simulation_mutex, NULL))
+	{
 		destroy_mutexes(table, table->n);
-        pthread_mutex_destroy(&table->meal_mutex);
+		pthread_mutex_destroy(&table->meal_mutex);
 		return (0);
-    }
+	}
 	if (pthread_mutex_init(&table->write_mutex, NULL))
 	{
 		destroy_mutexes(table, table->n);
 		pthread_mutex_destroy(&table->meal_mutex);
-        pthread_mutex_destroy(&table->simulation_mutex);
+		pthread_mutex_destroy(&table->simulation_mutex);
 		return (0);
 	}
 	return (1);
@@ -61,11 +61,11 @@ static void	philos_init(t_table *table)
 	i = 0;
 	while (i < table->n)
 	{
-		table->philos[i % table->n].id = i % table->n + 1;
-		table->philos[i % table->n].has_eaten = 0;
-		table->philos[i % table->n].left = &table->forks[i % table->n];
-		table->philos[i % table->n].right = &table->forks[(i + 1) % table->n];
-		table->philos[i % table->n].table = table;
+		table->philos[i].id = i + 1;
+		table->philos[i].has_eaten = 0;
+		table->philos[i].left = &table->forks[i % table->n];
+		table->philos[i].right = &table->forks[(i + 1) % table->n];
+		table->philos[i].table = table;
 		i++;
 	}
 }

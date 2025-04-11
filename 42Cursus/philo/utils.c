@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mikayel <mikayel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mzohraby <mzohraby@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/06 12:23:29 by mzohraby          #+#    #+#             */
-/*   Updated: 2025/04/09 15:32:55 by mikayel          ###   ########.fr       */
+/*   Updated: 2025/04/11 12:26:31 by mzohraby         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	ft_strlen(const char *s)
 {
-	int		i;
+	int	i;
 
 	i = 0;
 	while (s[i])
@@ -34,10 +34,10 @@ int	ft_strcmp(const char *s1, const char *s2)
 
 int	ft_atoi(const char *str)
 {
-	int				num;
+	int	num;
 
-	while (*str == ' ' || *str == '\t' || *str == '\v'
-		|| *str == '\f' || *str == '\n' || *str == '\r')
+	while (*str == ' ' || *str == '\t' || *str == '\v' || *str == '\f'
+		|| *str == '\n' || *str == '\r')
 		str++;
 	num = 0;
 	while (*str)

@@ -1,5 +1,5 @@
 CC = cc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -fsanitize=thread -g
 
 SRCS = philosophers.c utils.c init.c cleanup_functions.c main.c monitor.c
 
