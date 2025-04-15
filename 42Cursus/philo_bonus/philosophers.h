@@ -6,7 +6,7 @@
 /*   By: mikayel <mikayel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/06 12:39:57 by mzohraby          #+#    #+#             */
-/*   Updated: 2025/04/15 12:23:11 by mikayel          ###   ########.fr       */
+/*   Updated: 2025/04/15 13:06:44 by mikayel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,48 +18,40 @@
 # include <stdio.h>
 # include <sys/time.h>
 # include <unistd.h>
+# include <fcntl.h> 
+# include <sys/stat.h>
+# include <semaphore.h>
+# include <sys/wait.h>
+# include <signal.h>
 
 typedef struct s_philo	t_philo;
 
 typedef struct s_table
 {
 	int					n;
+	int					*pids;
+	int					id;
 	int					has_to_eat;
 	int					time_to_eat;
 	int					time_to_sleep;
 	int					time_to_die;
+	int					last_meal_time;
+	int					has_eaten;
 	int					start_time;
 	int					start_check;
 	int					simulation_over;
-	pthread_t			death_monitor;
-	pthread_mutex_t		simulation_mutex;
-	pthread_mutex_t		meal_mutex;
-	pthread_mutex_t		write_mutex;
-	pthread_mutex_t		*forks;
-	t_philo				*philos;
+	sem_t				*forks_sem;
+	sem_t				*write_sem;
+	sem_t				*sem;
 }						t_table;
-
-typedef struct s_philo
-{
-	pthread_t			thread;
-	int					id;
-	int					has_eaten;
-	int					last_meal_time;
-	pthread_mutex_t		*left;
-	pthread_mutex_t		*right;
-	t_table				*table;
-}						t_philo;
 
 int						init(t_table *table, int argc, char *argv[]);
 
-void					print_msg(char *msg, t_philo *philo);
+void					print_msg(char *msg, t_table *table);
 int						end_check(t_philo *philo);
 
-void					*philosopher_thread(void *philo);
+void					philosopher_process(t_table *table);
 void					*monitor(void *t);
-
-void					destroy_mutexes(t_table *table, int n);
-void					join_threads(t_table *table, int n);
 
 int						ft_strlen(const char *s);
 int						ft_strcmp(const char *s1, const char *s2);
