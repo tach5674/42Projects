@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mikayel <mikayel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mzohraby <mzohraby@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 14:46:34 by mzohraby          #+#    #+#             */
-/*   Updated: 2025/04/15 12:45:06 by mikayel          ###   ########.fr       */
+/*   Updated: 2025/04/16 13:24:09 by mzohraby         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ static int	fill_table(t_table *table, int argc, char *argv[])
 	table->has_to_eat = 0;
 	table->start_check = 0;
 	table->has_eaten = 0;
+	table->exit_code = 0;
 	table->n = ft_atoi(argv[1]);
 	if (table->n <= 0)
 		return (0);
