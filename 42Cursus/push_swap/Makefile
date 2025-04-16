@@ -39,7 +39,9 @@ $(LIBFT):
 $(NAME): $(LIBFT) $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -Llibft -lft -o $(NAME)
 
-bonus: $(LIBFT) $(BONUS_OBJS)
+bonus: $(LIBFT) $(BONUS_NAME)
+
+$(BONUS_NAME): $(BONUS_OBJS)
 	$(CC) $(CFLAGS) $(BONUS_OBJS) -Llibft -lft -o $(BONUS_NAME)
 
 %.o: %.c INCLUDES/*
