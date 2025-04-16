@@ -6,7 +6,7 @@
 /*   By: mzohraby <mzohraby@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 15:17:21 by mzohraby          #+#    #+#             */
-/*   Updated: 2025/03/19 16:46:22 by mzohraby         ###   ########.fr       */
+/*   Updated: 2025/04/16 16:06:36 by mzohraby         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,10 @@ void	sort(t_lst **a, t_lst **b)
 		if (!cmd)
 			return ;
 		if (!sort_helper(a, b, cmd))
+		{
+			free(cmd);
 			continue ;
+		}
 		if (ft_strcmp(cmd, "rr\n") == 0)
 		{
 			ra(a);
@@ -66,5 +69,6 @@ void	sort(t_lst **a, t_lst **b)
 			free_stack(a, b);
 			exit_error();
 		}
+		free(cmd);
 	}
 }
