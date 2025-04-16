@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mikayel <mikayel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mzohraby <mzohraby@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 14:46:34 by mzohraby          #+#    #+#             */
-/*   Updated: 2025/04/15 12:04:37 by mikayel          ###   ########.fr       */
+/*   Updated: 2025/04/16 13:00:16 by mzohraby         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,9 @@ static void	philos_init(t_table *table)
 		table->philos[i].left = &table->forks[i % table->n];
 		table->philos[i].right = &table->forks[(i + 1) % table->n];
 		table->philos[i].table = table;
+		table->philos[i].time_to_die = table->time_to_die;
+		table->philos[i].time_to_eat = table->time_to_eat;
+		table->philos[i].time_to_sleep = table->time_to_sleep;
 		i++;
 	}
 }

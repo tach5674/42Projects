@@ -3,19 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   philosophers.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mikayel <mikayel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mzohraby <mzohraby@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 15:07:05 by mikayel           #+#    #+#             */
-/*   Updated: 2025/04/15 12:22:44 by mikayel          ###   ########.fr       */
+/*   Updated: 2025/04/16 13:00:27 by mzohraby         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
 static void	eat(t_philo *self)
-{	
+{
 	print_msg(" is eating\n", self);
-	usleep(self->table->time_to_eat);
+	usleep(self->time_to_eat);
 	pthread_mutex_lock(&self->table->meal_mutex);
 	self->has_eaten++;
 	self->last_meal_time = get_time();
@@ -24,7 +24,8 @@ static void	eat(t_philo *self)
 	pthread_mutex_unlock(self->right);
 }
 
-static void	philosopher_routine(t_philo *self, pthread_mutex_t *left, pthread_mutex_t *right)
+static void	philosopher_routine(t_philo *self, pthread_mutex_t *left,
+		pthread_mutex_t *right)
 {
 	while (!end_check(self))
 	{
@@ -42,11 +43,12 @@ static void	philosopher_routine(t_philo *self, pthread_mutex_t *left, pthread_mu
 		print_msg(" is sleeping\n", self);
 		if (end_check(self))
 			return ;
-		usleep(self->table->time_to_sleep);
+		usleep(self->time_to_sleep);
 		print_msg(" is thinking\n", self);
-		usleep((self->table->time_to_die - self->table->time_to_eat - self->table->time_to_sleep) / 2);
 		if (end_check(self))
 			return ;
+		usleep((self->time_to_die - self->time_to_eat - self->time_to_sleep)
+			/ 2);
 	}
 }
 
@@ -57,8 +59,9 @@ static void	wait_to_start(t_philo *self)
 		pthread_mutex_lock(&self->table->meal_mutex);
 		if (self->table->start_check == 1)
 		{
+			self->last_meal_time = get_time();
 			pthread_mutex_unlock(&self->table->meal_mutex);
-			return ;			
+			return ;
 		}
 		pthread_mutex_unlock(&self->table->meal_mutex);
 	}

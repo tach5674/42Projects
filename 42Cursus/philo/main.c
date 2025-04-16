@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mikayel <mikayel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mzohraby <mzohraby@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 14:12:55 by mzohraby          #+#    #+#             */
-/*   Updated: 2025/04/15 12:22:50 by mikayel          ###   ########.fr       */
+/*   Updated: 2025/04/16 13:00:21 by mzohraby         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,8 @@ static int	simulation_start(t_table *table)
 	i = -1;
 	while (++i < table->n)
 	{
-		table->philos[i].last_meal_time = get_time();
 		if (pthread_create(&(table->philos[i].thread), NULL, philosopher_thread,
-		&table->philos[i]))
+				&table->philos[i]))
 		{
 			destroy_mutexes(table, table->n);
 			join_threads(table, i);
