@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mzohraby <mzohraby@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mikayel <mikayel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 14:12:55 by mzohraby          #+#    #+#             */
-/*   Updated: 2025/04/16 13:00:21 by mzohraby         ###   ########.fr       */
+/*   Updated: 2025/04/17 20:18:16 by mikayel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@ static void	set_start_time(t_table *table)
 
 	i = -1;
 	pthread_mutex_lock(&table->meal_mutex);
-	table->start_time = get_time();
-	while (i++ < table->n)
+	table->start_time = get_time() + 100;
+	while (++i < table->n)
 		table->philos[i].last_meal_time = table->start_time;
 	table->start_check = 1;
 	pthread_mutex_unlock(&table->meal_mutex);
@@ -30,6 +30,7 @@ static int	simulation_start(t_table *table)
 	int	i;
 
 	i = -1;
+	set_start_time(table);
 	while (++i < table->n)
 	{
 		if (pthread_create(&(table->philos[i].thread), NULL, philosopher_thread,
@@ -42,7 +43,6 @@ static int	simulation_start(t_table *table)
 			return (0);
 		}
 	}
-	set_start_time(table);
 	if (pthread_create(&(table->death_monitor), NULL, monitor, table))
 	{
 		destroy_mutexes(table, table->n);

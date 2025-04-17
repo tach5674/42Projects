@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosophers.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mzohraby <mzohraby@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mikayel <mikayel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 15:07:05 by mikayel           #+#    #+#             */
-/*   Updated: 2025/04/16 13:00:27 by mzohraby         ###   ########.fr       */
+/*   Updated: 2025/04/17 20:09:54 by mikayel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,13 +57,13 @@ static void	wait_to_start(t_philo *self)
 	while (1)
 	{
 		pthread_mutex_lock(&self->table->meal_mutex);
-		if (self->table->start_check == 1)
+		if (self->table->start_time <= get_time())
 		{
-			self->last_meal_time = get_time();
 			pthread_mutex_unlock(&self->table->meal_mutex);
 			return ;
 		}
 		pthread_mutex_unlock(&self->table->meal_mutex);
+		usleep(1000);
 	}
 }
 

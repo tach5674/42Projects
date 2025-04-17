@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosophers.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mzohraby <mzohraby@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mikayel <mikayel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/06 12:39:57 by mzohraby          #+#    #+#             */
-/*   Updated: 2025/04/16 13:32:36 by mzohraby         ###   ########.fr       */
+/*   Updated: 2025/04/17 18:40:36 by mikayel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ typedef struct s_table
 	int					n;
 	int					*pids;
 	int					id;
-	pthread_t			thread;
+	pthread_t			monitor_thread;
 	int					has_to_eat;
 	int					time_to_eat;
 	int					time_to_sleep;
@@ -48,12 +48,17 @@ typedef struct s_table
 	sem_t				*write_sem;
 	sem_t				*meal_sem;
 	sem_t				*sim_sem;
+	sem_t				*kill_sem;
 }						t_table;
 
 int						init(t_table *table, int argc, char *argv[]);
 
 void					print_msg(char *msg, t_table *table);
 int						end_check(t_table *table);
+
+void					kill_all(t_table *table);
+
+void	*main_monitor(void *t);
 
 void					philosopher_process(t_table *table);
 void					*monitor(void *t);

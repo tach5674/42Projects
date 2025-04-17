@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosophers.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mzohraby <mzohraby@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mikayel <mikayel@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 15:07:05 by mikayel           #+#    #+#             */
-/*   Updated: 2025/04/16 14:02:55 by mzohraby         ###   ########.fr       */
+/*   Updated: 2025/04/17 20:16:09 by mikayel          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,14 @@ static void	eat(t_table *table)
 	{
 		sem_post(table->forks_sem);
 		sem_post(table->forks_sem);
-		exit(table->exit_code);
+		sem_close(table->forks_sem);
+		sem_close(table->write_sem);
+		sem_close(table->meal_sem);
+		sem_close(table->sim_sem);
+		sem_close(table->kill_sem);
+		if (pthread_join(table->monitor_thread, NULL))
+			exit(EXIT_FAILURE);
+		exit(EXIT_SUCCESS);
 	}
 	usleep(table->time_to_eat);
 	sem_wait(table->meal_sem);
@@ -30,13 +37,8 @@ static void	eat(t_table *table)
 	sem_post(table->forks_sem);
 }
 
-static void	philosopher_routine(t_table *table)
+static void	philosopher_routine(t_table *table, int time_to_die)
 {
-	int	time_to_die;
-	
-	sem_wait(table->meal_sem);
-	time_to_die = table->time_to_die;
-	sem_post(table->meal_sem);
 	while (1)
 	{
 		sem_wait(table->forks_sem);
@@ -53,10 +55,29 @@ static void	philosopher_routine(t_table *table)
 			break ;
 		usleep((time_to_die - table->time_to_eat - table->time_to_sleep) / 2);
 	}
-	exit(table->exit_code);
+	sem_close(table->forks_sem);
+	sem_close(table->write_sem);
+	sem_close(table->meal_sem);
+	sem_close(table->sim_sem);
+	sem_close(table->kill_sem);
+	if (pthread_join(table->monitor_thread, NULL))
+		exit(EXIT_FAILURE);
+	exit(EXIT_SUCCESS);
 }
 
-void	*philosopher_thread(void *t)
+void	kill_all(t_table *table)
+{
+	int	i;
+
+	i = 0;
+	while (i < table->n)
+	{
+		kill(table->pids[i], SIGKILL);
+		i++;
+	}
+}
+
+void	*monitor_thread(void *t)
 {
 	t_table	*table;
 
@@ -64,18 +85,20 @@ void	*philosopher_thread(void *t)
 	while (1)
 	{
 		sem_wait(table->meal_sem);
-		if (table->has_eaten >= table->has_to_eat)
+		if (table->has_to_eat && table->has_eaten >= table->has_to_eat)
 		{
 			sem_wait(table->sim_sem);
-			table->exit_code = FINISHED_EXIT_CODE;
+			table->simulation_over = 1;
 			sem_post(table->sim_sem);
+			sem_post(table->meal_sem);
 			return (NULL);
 		}
-		if (table->last_meal_time + table->time_to_die >= get_time())
+		if 	(get_time() - table->last_meal_time >= table->time_to_die / 1000)
 		{
 			sem_wait(table->sim_sem);
-			table->exit_code = DEAD_EXIT_CODE;
-			sem_post(table->sim_sem);
+			sem_wait(table->write_sem);
+			printf("%d %d %s", get_time() - table->start_time, table->id, " died\n");
+			sem_post(table->kill_sem);
 			return (NULL);
 		}
 		sem_post(table->meal_sem);
@@ -85,12 +108,23 @@ void	*philosopher_thread(void *t)
 
 void	philosopher_process(t_table *table)
 {
+	int	time_to_die;
+	
+	free(table->pids);
+	while (table->start_time > get_time())
+		usleep(1000);
 	if (table->n == 1)
 	{
-		
+		print_msg(" has taken a fork\n", table);
+		usleep(table->time_to_die);
+		print_msg(" died\n", table);
+		exit(EXIT_SUCCESS);
 	}
-	if (pthread_create(&table->thread, NULL, philosopher_thread, table))
+	time_to_die = table->time_to_die;
+	if (table->id % 2)
+		usleep(1000);
+	if (pthread_create(&table->monitor_thread, NULL, monitor_thread, table))
 		exit(ERROR_EXIT_CODE);
-	philosopher_routine(table);
-	exit(0);
+	philosopher_routine(table, time_to_die);
+	exit(EXIT_SUCCESS);
 }
