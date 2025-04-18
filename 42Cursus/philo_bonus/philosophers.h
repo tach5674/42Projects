@@ -6,7 +6,7 @@
 /*   By: mzohraby <mzohraby@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/06 12:39:57 by mzohraby          #+#    #+#             */
-/*   Updated: 2025/04/18 13:01:20 by mzohraby         ###   ########.fr       */
+/*   Updated: 2025/04/18 13:42:06 by mzohraby         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,9 +56,10 @@ void			init_philos(t_table *table);
 void			init_sem(t_table *table);
 
 void			exit_error(t_table *table, char *msg);
+void			exit_init(char *msg);
 
-void			print_msg(char *msg, t_table *table);
 int				end_check(t_table *table);
+void			print_msg(char *msg, t_table *table);
 
 void			kill_all(t_table *table);
 

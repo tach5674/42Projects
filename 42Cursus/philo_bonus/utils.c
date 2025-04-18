@@ -6,7 +6,7 @@
 /*   By: mzohraby <mzohraby@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/06 12:23:29 by mzohraby          #+#    #+#             */
-/*   Updated: 2025/04/18 13:03:01 by mzohraby         ###   ########.fr       */
+/*   Updated: 2025/04/18 13:40:52 by mzohraby         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	exit_error(t_table *table, char *msg)
 	exit(1);
 }
 
-static void	exit_init(char *msg)
+void	exit_init(char *msg)
 {
 	write(2, msg, ft_strlen(msg));
 	exit(1);

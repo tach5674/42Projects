@@ -6,7 +6,7 @@
 /*   By: mzohraby <mzohraby@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 14:12:55 by mzohraby          #+#    #+#             */
-/*   Updated: 2025/04/18 13:01:05 by mzohraby         ###   ########.fr       */
+/*   Updated: 2025/04/18 13:42:59 by mzohraby         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,16 +24,7 @@ void	kill_all(t_table *table)
 	}
 }
 
-static void	simulation_start(t_table *table)
-{
-	init_sem(table);
-	init_philos(table);
-	sem_post(table->meal_sem);
-	if (pthread_create(&table->monitor_thread, NULL, main_monitor, table))
-		exit_error(table, "thread creation failed\n");
-}
-
-static void	*main_monitor(void *t)
+void	*main_monitor(void *t)
 {
 	t_table	*table;
 
@@ -43,6 +34,15 @@ static void	*main_monitor(void *t)
 	free(table->pids);
 	sem_post(table->kill_sem);
 	return (NULL);
+}
+
+static void	simulation_start(t_table *table)
+{
+	init_sem(table);
+	init_philos(table);
+	sem_post(table->meal_sem);
+	if (pthread_create(&table->monitor_thread, NULL, main_monitor, table))
+		exit_error(table, "thread creation failed\n");
 }
 
 static void	simulation_end(t_table *table)

@@ -6,7 +6,7 @@
 /*   By: mzohraby <mzohraby@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 15:07:05 by mikayel           #+#    #+#             */
-/*   Updated: 2025/04/18 13:00:54 by mzohraby         ###   ########.fr       */
+/*   Updated: 2025/04/18 13:49:15 by mzohraby         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,16 +99,21 @@ void	philosopher_process(t_table *table)
 	int	time_to_die;
 
 	free(table->pids);
+	time_to_die = table->time_to_die;
+	while (table->start_time > get_time())
+		usleep(100);
 	if (table->n == 1)
 	{
 		print_msg(" has taken a fork\n", table);
 		usleep(table->time_to_die);
 		print_msg(" died\n", table);
+		sem_close(table->forks_sem);
+		sem_close(table->write_sem);
+		sem_close(table->meal_sem);
+		sem_close(table->sim_sem);
+		sem_close(table->kill_sem);
 		exit(EXIT_SUCCESS);
 	}
-	time_to_die = table->time_to_die;
-	while (table->start_time > get_time())
-		usleep(100);
 	if (table->id % 2 == 0)
 		usleep(10000);
 	if (pthread_create(&table->monitor_thread, NULL, monitor_thread, table))
