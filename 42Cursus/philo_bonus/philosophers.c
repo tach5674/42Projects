@@ -6,7 +6,7 @@
 /*   By: mzohraby <mzohraby@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 15:07:05 by mikayel           #+#    #+#             */
-/*   Updated: 2025/04/18 13:49:15 by mzohraby         ###   ########.fr       */
+/*   Updated: 2025/04/18 16:46:38 by mzohraby         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ static void	eat(t_table *table)
 			exit(EXIT_FAILURE);
 		exit(EXIT_SUCCESS);
 	}
-	usleep(table->time_to_eat);
+	ft_sleep(table->time_to_eat);
 	sem_wait(table->meal_sem);
 	table->has_eaten++;
 	table->last_meal_time = get_time();
@@ -49,11 +49,11 @@ static void	philosopher_routine(t_table *table, int time_to_die)
 		print_msg(" is sleeping\n", table);
 		if (end_check(table))
 			break ;
-		usleep(table->time_to_sleep);
+		ft_sleep(table->time_to_sleep);
 		print_msg(" is thinking\n", table);
 		if (end_check(table))
 			break ;
-		usleep((time_to_die - table->time_to_eat - table->time_to_sleep) / 2);
+		ft_sleep((time_to_die - table->time_to_eat - table->time_to_sleep) / 2);
 	}
 	sem_close(table->forks_sem);
 	sem_close(table->write_sem);
@@ -86,7 +86,7 @@ static void	*monitor_thread(void *t)
 			sem_wait(table->sim_sem);
 			sem_wait(table->write_sem);
 			printf("%d %d %s", get_time() - table->start_time, table->id,
-				" died\n");
+				"died\n");
 			return (sem_post(table->kill_sem), NULL);
 		}
 		sem_post(table->meal_sem);
@@ -105,7 +105,7 @@ void	philosopher_process(t_table *table)
 	if (table->n == 1)
 	{
 		print_msg(" has taken a fork\n", table);
-		usleep(table->time_to_die);
+		ft_sleep(table->time_to_die);
 		print_msg(" died\n", table);
 		sem_close(table->forks_sem);
 		sem_close(table->write_sem);
@@ -115,7 +115,7 @@ void	philosopher_process(t_table *table)
 		exit(EXIT_SUCCESS);
 	}
 	if (table->id % 2 == 0)
-		usleep(10000);
+		ft_sleep(10000);
 	if (pthread_create(&table->monitor_thread, NULL, monitor_thread, table))
 		exit(EXIT_FAILURE);
 	philosopher_routine(table, time_to_die);

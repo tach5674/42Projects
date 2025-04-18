@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosophers_utils.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mikayel <mikayel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mzohraby <mzohraby@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 12:22:30 by mikayel           #+#    #+#             */
-/*   Updated: 2025/04/15 12:22:56 by mikayel          ###   ########.fr       */
+/*   Updated: 2025/04/18 16:47:30 by mzohraby         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,15 @@ void	print_msg(char *msg, t_philo *philo)
 	if (end_check(philo))
 		return ;
 	pthread_mutex_lock(&philo->table->write_mutex);
-	printf("%d %d %s", get_time() - philo->table->start_time, philo->id, msg);
+	printf("%d %d%s", get_time() - philo->table->start_time, philo->id, msg);
 	pthread_mutex_unlock(&philo->table->write_mutex);
+}
+
+void	ft_sleep(int time_to_sleep)
+{
+	int	current_time;
+
+	current_time = get_time();
+	while (get_time() - current_time < time_to_sleep / 1000)
+		usleep(100);
 }

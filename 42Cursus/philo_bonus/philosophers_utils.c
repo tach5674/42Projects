@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosophers_utils.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mikayel <mikayel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mzohraby <mzohraby@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/15 12:22:30 by mikayel           #+#    #+#             */
-/*   Updated: 2025/04/17 17:05:30 by mikayel          ###   ########.fr       */
+/*   Updated: 2025/04/18 16:47:45 by mzohraby         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,15 @@ void	print_msg(char *msg, t_table *table)
 		sem_post(table->write_sem);
 		return ;
 	}
-	printf("%d %d %s", get_time() - table->start_time, table->id, msg);
+	printf("%d %d%s", get_time() - table->start_time, table->id, msg);
 	sem_post(table->write_sem);
+}
+
+void	ft_sleep(int time_to_sleep)
+{
+	int	current_time;
+
+	current_time = get_time();
+	while (get_time() - current_time < time_to_sleep / 1000)
+		usleep(100);
 }

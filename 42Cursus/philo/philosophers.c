@@ -6,7 +6,7 @@
 /*   By: mzohraby <mzohraby@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 15:07:05 by mikayel           #+#    #+#             */
-/*   Updated: 2025/04/18 11:05:49 by mzohraby         ###   ########.fr       */
+/*   Updated: 2025/04/18 16:19:50 by mzohraby         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 static void	eat(t_philo *self)
 {
 	print_msg(" is eating\n", self);
-	usleep(self->time_to_eat);
+	ft_sleep(self->time_to_eat);
 	pthread_mutex_lock(&self->table->meal_mutex);
 	self->has_eaten++;
 	self->last_meal_time = get_time();
@@ -43,11 +43,11 @@ static void	philosopher_routine(t_philo *self, pthread_mutex_t *left,
 		print_msg(" is sleeping\n", self);
 		if (end_check(self))
 			return ;
-		usleep(self->time_to_sleep);
+		ft_sleep(self->time_to_sleep);
 		print_msg(" is thinking\n", self);
 		if (end_check(self))
 			return ;
-		usleep((self->time_to_die - self->time_to_eat - self->time_to_sleep)
+		ft_sleep((self->time_to_die - self->time_to_eat - self->time_to_sleep)
 			/ 2);
 	}
 }
@@ -63,7 +63,7 @@ static void	wait_to_start(t_philo *self)
 			return ;
 		}
 		pthread_mutex_unlock(&self->table->meal_mutex);
-		usleep(100);
+		usleep(1000);
 	}
 }
 

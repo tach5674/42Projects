@@ -6,7 +6,7 @@
 /*   By: mzohraby <mzohraby@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/06 12:39:57 by mzohraby          #+#    #+#             */
-/*   Updated: 2025/04/18 13:57:11 by mzohraby         ###   ########.fr       */
+/*   Updated: 2025/04/18 16:25:04 by mzohraby         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,5 +70,6 @@ int				ft_strlen(const char *s);
 int				ft_strcmp(const char *s1, const char *s2);
 int				ft_atoi(const char *str);
 int				get_time(void);
+void			ft_sleep(int time_to_sleep);
 
 #endif
