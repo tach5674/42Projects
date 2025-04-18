@@ -6,7 +6,7 @@
 /*   By: mzohraby <mzohraby@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/06 12:39:57 by mzohraby          #+#    #+#             */
-/*   Updated: 2025/04/16 12:56:18 by mzohraby         ###   ########.fr       */
+/*   Updated: 2025/04/18 14:01:07 by mzohraby         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@ typedef struct s_table
 	int					time_to_sleep;
 	int					time_to_die;
 	int					start_time;
-	int					start_check;
 	int					simulation_over;
 	pthread_t			death_monitor;
 	pthread_mutex_t		simulation_mutex;

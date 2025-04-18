@@ -6,7 +6,7 @@
 /*   By: mzohraby <mzohraby@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/08 14:46:34 by mzohraby          #+#    #+#             */
-/*   Updated: 2025/04/16 13:00:16 by mzohraby         ###   ########.fr       */
+/*   Updated: 2025/04/18 14:01:00 by mzohraby         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,6 @@ static int	fill_table(t_table *table, int argc, char *argv[])
 		return (0);
 	table->simulation_over = 0;
 	table->has_to_eat = 0;
-	table->start_check = 0;
 	table->n = ft_atoi(argv[1]);
 	if (table->n <= 0)
 		return (0);

@@ -6,7 +6,7 @@
 /*   By: mzohraby <mzohraby@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/06 12:23:29 by mzohraby          #+#    #+#             */
-/*   Updated: 2025/04/11 12:26:31 by mzohraby         ###   ########.fr       */
+/*   Updated: 2025/04/18 14:05:09 by mzohraby         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,8 @@ int	fits_integer(int argc, char *argv[])
 	i = 1;
 	while (i < argc)
 	{
+		if (argv[i][0] == '0' && ft_strlen(argv[i]) > 1)
+			return (0);
 		if (ft_strlen(argv[i]) > 10 || (ft_strlen(argv[i]) == 10
 				&& ft_strcmp(argv[i], "2147483647") > 0))
 			return (0);

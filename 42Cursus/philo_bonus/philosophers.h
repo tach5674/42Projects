@@ -6,7 +6,7 @@
 /*   By: mzohraby <mzohraby@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/06 12:39:57 by mzohraby          #+#    #+#             */
-/*   Updated: 2025/04/18 13:42:06 by mzohraby         ###   ########.fr       */
+/*   Updated: 2025/04/18 13:57:11 by mzohraby         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,7 @@ typedef struct s_table
 	int			last_meal_time;
 	int			has_eaten;
 	int			start_time;
-	int			start_check;
 	int			simulation_over;
-	int			exit_code;
 	sem_t		*forks_sem;
 	sem_t		*write_sem;
 	sem_t		*meal_sem;
