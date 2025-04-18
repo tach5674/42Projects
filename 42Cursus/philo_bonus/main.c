@@ -3,76 +3,41 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mikayel <mikayel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mzohraby <mzohraby@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 14:12:55 by mzohraby          #+#    #+#             */
-/*   Updated: 2025/04/17 20:18:01 by mikayel          ###   ########.fr       */
+/*   Updated: 2025/04/18 13:01:05 by mzohraby         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-void	exit_error(void)
-{
-	write(2, "Error\n", ft_strlen("Error\n"));
-	exit(1);
-}
-
-static int	simulation_start(t_table *table)
+void	kill_all(t_table *table)
 {
 	int	i;
-	
-	table->pids = malloc(table->n * sizeof(int));
-	if (!table->pids)
-		exit_error();
-	table->forks_sem = sem_open("/forks", O_CREAT | O_EXCL, 0666, table->n);
-	table->write_sem = sem_open("/write", O_CREAT | O_EXCL, 0666, 1);
-	table->meal_sem = sem_open("/meal", O_CREAT | O_EXCL, 0666, 0);
-	table->sim_sem = sem_open("/sim", O_CREAT | O_EXCL, 0666, 1);
-	table->kill_sem = sem_open("/kill", O_CREAT | O_EXCL, 0666, 0);
-	if (table->forks_sem == SEM_FAILED || table->write_sem == SEM_FAILED
-		|| table->meal_sem == SEM_FAILED || table->sim_sem == SEM_FAILED || table->kill_sem == SEM_FAILED)
-	{
-		free(table->pids);
-		exit_error();
-	}
-	if (sem_unlink("/forks") == -1 || sem_unlink("/write") == -1
-		|| sem_unlink("/meal") == -1 || sem_unlink("/sim") == -1 || sem_unlink("/kill") == -1)
-	{
-		free(table->pids);
-		exit_error();
-	}
+
 	i = 0;
-	table->start_time = get_time() + 100;
-	table->last_meal_time = table->start_time;
 	while (i < table->n)
 	{
-		table->pids[i] = fork();
-		if (table->pids[i] == -1)
-		{
-			exit_error();
-		}
-		if (table->pids[i] == 0)
-		{
-			table->id = i + 1;
-			philosopher_process(table);
-		}
+		kill(table->pids[i], SIGKILL);
 		i++;
 	}
-	sem_post(table->meal_sem);
-	if (pthread_create(&table->monitor_thread, NULL, main_monitor, table))
-	{
-		free(table->pids);
-		exit_error();
-	}
-	return (1);
 }
 
-void	*main_monitor(void *t)
+static void	simulation_start(t_table *table)
+{
+	init_sem(table);
+	init_philos(table);
+	sem_post(table->meal_sem);
+	if (pthread_create(&table->monitor_thread, NULL, main_monitor, table))
+		exit_error(table, "thread creation failed\n");
+}
+
+static void	*main_monitor(void *t)
 {
 	t_table	*table;
 
-	table= t;
+	table = t;
 	sem_wait(table->kill_sem);
 	kill_all(table);
 	free(table->pids);
@@ -80,7 +45,7 @@ void	*main_monitor(void *t)
 	return (NULL);
 }
 
-static int	simulation_end(t_table *table)
+static void	simulation_end(t_table *table)
 {
 	int	status;
 
@@ -91,41 +56,27 @@ static int	simulation_end(t_table *table)
 			if (WEXITSTATUS(status) == EXIT_FAILURE)
 			{
 				kill_all(table);
-				free(table->pids);
-				exit_error(); 
+				exit_error(table, "child process exited with error\n");
 			}
 		}
 	}
 	if (WEXITSTATUS(status) != SIGKILL)
 		sem_post(table->kill_sem);
 	if (pthread_join(table->monitor_thread, NULL))
-		exit_error();
+		exit_error(table, "thread join failed\n");
 	sem_close(table->forks_sem);
 	sem_close(table->write_sem);
 	sem_close(table->meal_sem);
 	sem_close(table->sim_sem);
 	sem_close(table->kill_sem);
-	return (1);
 }
 
 int	main(int argc, char *argv[])
 {
 	t_table	table;
-	
-	if (!init(&table, argc, argv))
-	{
-		write(2, "Error\n", ft_strlen("Error\n"));
-		return (EXIT_FAILURE);
-	}
-	if (!simulation_start(&table))
-	{
-		write(2, "Error\n", ft_strlen("Error\n"));
-		return (EXIT_FAILURE);
-	}
-	if (!simulation_end(&table))
-	{
-		write(2, "Error\n", ft_strlen("Error\n"));
-		return (EXIT_FAILURE);
-	}
+
+	init(&table, argc, argv);
+	simulation_start(&table);
+	simulation_end(&table);
 	return (0);
 }

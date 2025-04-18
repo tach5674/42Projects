@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   philosophers.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mikayel <mikayel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mzohraby <mzohraby@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 15:07:05 by mikayel           #+#    #+#             */
-/*   Updated: 2025/04/17 20:16:09 by mikayel          ###   ########.fr       */
+/*   Updated: 2025/04/18 13:00:54 by mzohraby         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
 static void	eat(t_table *table)
-{	
+{
 	print_msg(" is eating\n", table);
 	if (end_check(table))
 	{
@@ -65,19 +65,7 @@ static void	philosopher_routine(t_table *table, int time_to_die)
 	exit(EXIT_SUCCESS);
 }
 
-void	kill_all(t_table *table)
-{
-	int	i;
-
-	i = 0;
-	while (i < table->n)
-	{
-		kill(table->pids[i], SIGKILL);
-		i++;
-	}
-}
-
-void	*monitor_thread(void *t)
+static void	*monitor_thread(void *t)
 {
 	t_table	*table;
 
@@ -93,13 +81,13 @@ void	*monitor_thread(void *t)
 			sem_post(table->meal_sem);
 			return (NULL);
 		}
-		if 	(get_time() - table->last_meal_time >= table->time_to_die / 1000)
+		if (get_time() - table->last_meal_time >= table->time_to_die / 1000)
 		{
 			sem_wait(table->sim_sem);
 			sem_wait(table->write_sem);
-			printf("%d %d %s", get_time() - table->start_time, table->id, " died\n");
-			sem_post(table->kill_sem);
-			return (NULL);
+			printf("%d %d %s", get_time() - table->start_time, table->id,
+				" died\n");
+			return (sem_post(table->kill_sem), NULL);
 		}
 		sem_post(table->meal_sem);
 		usleep(1000);
@@ -109,10 +97,8 @@ void	*monitor_thread(void *t)
 void	philosopher_process(t_table *table)
 {
 	int	time_to_die;
-	
+
 	free(table->pids);
-	while (table->start_time > get_time())
-		usleep(1000);
 	if (table->n == 1)
 	{
 		print_msg(" has taken a fork\n", table);
@@ -121,10 +107,12 @@ void	philosopher_process(t_table *table)
 		exit(EXIT_SUCCESS);
 	}
 	time_to_die = table->time_to_die;
-	if (table->id % 2)
-		usleep(1000);
+	while (table->start_time > get_time())
+		usleep(100);
+	if (table->id % 2 == 0)
+		usleep(10000);
 	if (pthread_create(&table->monitor_thread, NULL, monitor_thread, table))
-		exit(ERROR_EXIT_CODE);
+		exit(EXIT_FAILURE);
 	philosopher_routine(table, time_to_die);
 	exit(EXIT_SUCCESS);
 }

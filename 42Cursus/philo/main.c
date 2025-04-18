@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mikayel <mikayel@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mzohraby <mzohraby@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/04 14:12:55 by mzohraby          #+#    #+#             */
-/*   Updated: 2025/04/17 20:18:16 by mikayel          ###   ########.fr       */
+/*   Updated: 2025/04/18 11:41:59 by mzohraby         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ static void	set_start_time(t_table *table)
 	table->start_time = get_time() + 100;
 	while (++i < table->n)
 		table->philos[i].last_meal_time = table->start_time;
-	table->start_check = 1;
 	pthread_mutex_unlock(&table->meal_mutex);
 }
 
